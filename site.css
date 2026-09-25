@@ -121,7 +121,17 @@ dl.trouble dd { margin: 0; color: var(--ink-2); }
 .rules li::marker { color: var(--accent-ink); font-weight: 600; }
 .how { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
 
-footer.site-foot { max-width: 1120px; margin: 40px auto 0; padding-top: 16px; border-top: 1px solid var(--line); font-family: "Chakra Petch", sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+footer.site-foot { max-width: 1120px; margin: 40px auto 0; padding-top: 16px; border-top: 1px solid var(--line); font-family: "Chakra Petch", sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
+footer.site-foot nav { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-left: auto; }
+footer.site-foot a { color: var(--ink-2); text-decoration: none; }
+footer.site-foot a:hover, footer.site-foot a[aria-current="page"] { color: var(--ink); }
+
+/* ---- legal pages (terms, privacy): the text is pasted in as-is ---- */
+.legal { margin-top: 20px; }
+.legal.plain { white-space: pre-line; }
+.legal h2 { font-size: 22px; margin: 30px 0 12px; }
+.legal h3 { font-family: "Chakra Petch", sans-serif; font-weight: 600; font-size: 17px; margin: 22px 0 8px; }
+.legal-links { margin-top: 32px; font-size: 15px; color: var(--ink-2); }
 
 @media (max-width: 800px) {
   .frame { grid-template-columns: 1fr; gap: 20px; }
