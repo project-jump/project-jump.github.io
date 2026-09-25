@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Difficulty Rating Rules</title>
+<meta name="description" content="How mappers rate a project_jump route 1 to 10, and where the tier comes from.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="single">
+<div class="site"><div class="in">
+  <a class="mark" href="index.html">PROJECT_JUMP<small>MAPPING</small></a>
+  <nav aria-label="Pages"><a href="index.html">Mapping guide</a><a href="difficulty.html" aria-current="page">Difficulty ratings</a></nav>
+</div></div>
+<main>
+<header>
+  <div class="eyebrow">project_jump · for mappers</div>
+  <h1>Difficulty Rating Rules</h1>
+  <p class="lede">The rating answers one question: <strong>who can finish this route, and how long does it take them?</strong> Nothing about which tricks it uses — just that. One number per route, 1 to 10; the tier comes from the number.</p>
+</header>
+
+<h2>The scale</h2>
+<ul class="tiers">
+  <li class="tier easy">
+    <div class="head"><b>EASY · 1–3</b><span class="who">A brand-new player finishes it.</span></div>
+    <ul class="nums">
+      <li><span class="n">1</span><span>in their first hour of playing</span></li>
+      <li><span class="n">2</span><span>in their first session</span></li>
+      <li><span class="n">3</span><span>in their first week</span></li>
+    </ul>
+  </li>
+  <li class="tier medium">
+    <div class="head"><b>MEDIUM · 4–5</b><span class="who">A regular jumper finishes it.</span></div>
+    <ul class="nums">
+      <li><span class="n">4</span><span>in one sitting</span></li>
+      <li><span class="n">5</span><span>over a few sessions</span></li>
+    </ul>
+  </li>
+  <li class="tier hard">
+    <div class="head"><b>HARD · 6–8</b><span class="who">Only experienced jumpers finish it.</span></div>
+    <ul class="nums">
+      <li><span class="n">6</span><span>in one session</span></li>
+      <li><span class="n">7</span><span>over a few sessions</span></li>
+      <li><span class="n">8</span><span>over weeks</span></li>
+    </ul>
+  </li>
+  <li class="tier insane">
+    <div class="head"><b>INSANE · 9–10</b><span class="who">Only the best players finish it.</span></div>
+    <ul class="nums">
+      <li><span class="n">9</span><span>a few people have</span></li>
+      <li><span class="n">10</span><span>one person has, or nobody yet</span></li>
+    </ul>
+  </li>
+</ul>
+
+<h2>Three rules</h2>
+<ol class="rules">
+  <li><strong>Rate the route as it's meant to be played.</strong> Each route gets its own number. A skip or an exploit doesn't change it.</li>
+  <li><strong>A rating is a guess until people play it.</strong> The leaderboard tells the truth: if nobody finishes your "3", it isn't a 3. Change the number; it takes a minute and nobody minds.</li>
+  <li><strong>Not sure? Ask in #mapping.</strong> Someone who has played maps like yours will have an opinion, and that beats guessing alone. 0 means "not rated yet", which is fine while it's in testing.</li>
+</ol>
+
+<h2>Where to put it</h2>
+<div class="how">
+  <p>Open your map's info asset (<code>&lt;LevelName&gt;_Info</code>, next to the level). Under <strong>Routes</strong>, one entry per finish route: the route name from your timer zones (<code>main</code> if there's one route) and its <strong>Number</strong>. The card shows the tier colour, the number and a meter from it.</p>
+  <p style="margin:0">While you're there: <strong>Thumbnail</strong> takes a square picture, 1024×1024 PNG. Take a screenshot in play, crop it square, import it next to the level.</p>
+</div>
+</main>
+<footer class="site-foot">project_jump · mapping docs</footer>
+</body>
+</html>

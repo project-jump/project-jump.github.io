@@ -1,0 +1,134 @@
+/* project_jump mapping docs — one stylesheet for every page. Chakra Petch for anything that
+   reads as a label or heading (the game's own face), Source Sans for running text. Light and
+   dark follow the visitor's system setting. */
+
+:root {
+  --ground: #f3f4f2; --paper: #ffffff; --ink: #14171c; --ink-2: #4d5661; --line: #d7dbd2;
+  --accent: #7aa100; --accent-ink: #5e7c00; --chip: #e8ebe3;
+  --code-bg: #e8ebe3; --code-ink: #182028;
+  --easy: #1f9d55; --medium: #b58900; --hard: #d9531e; --insane: #9b3fd1;
+  --start: #1f9d55; --finish: #d9531e;
+  --note-bg: #f4f7e6; --note-line: #cfdba0;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ground: #0c0e12; --paper: #14171c; --ink: #f2f4f7; --ink-2: #9aa3ad; --line: #262b33;
+    --accent: #d8ff3d; --accent-ink: #d8ff3d; --chip: #1c2027;
+    --code-bg: #10131a; --code-ink: #dfe4ea;
+    --easy: #6ee7a8; --medium: #ffd166; --hard: #ff8a5b; --insane: #e879f9;
+    --start: #6ee7a8; --finish: #ff8a5b;
+    --note-bg: #171b12; --note-line: #3a4520;
+    color-scheme: dark;
+  }
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: 72px; }
+body {
+  margin: 0; background: var(--ground); color: var(--ink);
+  font-family: "Source Sans 3", "Segoe UI", system-ui, sans-serif; font-size: 17px; line-height: 1.55;
+  padding-block: 0 64px; padding-inline: 16px;
+}
+a { color: var(--accent-ink); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+strong { font-weight: 600; }
+p { margin: 0 0 12px; }
+ul, ol { margin: 0 0 12px; padding-left: 1.3em; }
+li { margin: 0 0 6px; }
+li::marker { color: var(--ink-2); }
+code, pre, kbd { font-family: Consolas, "JetBrains Mono", monospace; }
+code { font-size: .88em; background: var(--code-bg); color: var(--code-ink); padding: .08em .35em; border-radius: 3px; }
+pre { background: var(--code-bg); color: var(--code-ink); padding: 14px 16px; border-radius: 6px; overflow-x: auto; font-size: 14px; line-height: 1.5; margin: 0 0 14px; }
+pre code { background: none; padding: 0; font-size: inherit; }
+pre .c { color: var(--ink-2); }
+pre .you { color: var(--accent-ink); font-weight: 600; }
+kbd { font-size: .85em; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 3px; padding: 0 .35em; background: var(--paper); }
+
+/* ---- site bar ---- */
+.site { position: sticky; top: 0; z-index: 5; background: var(--ground); border-bottom: 1px solid var(--line); margin: 0 -16px; padding: 0 16px; }
+.site .in { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; gap: 22px; height: 56px; }
+.site .mark { font-family: "Chakra Petch", sans-serif; font-weight: 700; letter-spacing: .06em; font-size: 17px; color: var(--ink); text-decoration: none; }
+.site .mark small { font-weight: 500; letter-spacing: .2em; font-size: 10px; color: var(--ink-2); margin-left: 10px; }
+.site nav { display: flex; gap: 4px; margin-left: auto; }
+.site nav a { font-family: "Chakra Petch", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; text-decoration: none; color: var(--ink-2); padding: 7px 12px; border-radius: 6px; }
+.site nav a:hover { color: var(--ink); background: var(--chip); }
+.site nav a[aria-current="page"] { color: #0c0e12; background: var(--accent); }
+
+/* ---- page head ---- */
+.masthead { max-width: 1120px; margin: 0 auto; padding: 40px 0 22px; border-bottom: 1px solid var(--line); }
+.eyebrow { font-family: "Chakra Petch", sans-serif; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; font-size: 12px; color: var(--accent-ink); }
+h1 { font-family: "Chakra Petch", sans-serif; font-weight: 700; font-size: clamp(34px, 5vw, 52px); line-height: 1.02; margin: 6px 0 10px; text-wrap: balance; }
+.lede { max-width: 62ch; margin: 0; font-size: 19px; color: var(--ink-2); }
+.lede strong { color: var(--ink); }
+.single main > header { padding: 40px 0 20px; margin-bottom: 8px; border-bottom: 1px solid var(--line); }
+.single h2 { font-size: 22px; margin: 30px 0 12px; }
+
+/* ---- guide layout: sticky contents + main column ---- */
+.frame { max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; padding-top: 24px; }
+nav.toc { position: sticky; top: 72px; align-self: start; padding-top: 12px; font-size: 14px; }
+nav.toc .label { font-family: "Chakra Petch", sans-serif; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-size: 11px; color: var(--ink-2); margin-bottom: 8px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+nav.toc a { display: block; padding: 4px 8px; border-left: 2px solid var(--line); text-decoration: none; color: var(--ink); }
+nav.toc a:hover { border-color: var(--accent); }
+nav.toc .n { display: inline-block; width: 1.6em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+
+main { max-width: 68ch; }
+.single main { max-width: 720px; margin: 0 auto; }
+section { padding: 28px 0; border-bottom: 1px solid var(--line); }
+section:last-child { border-bottom: 0; }
+h2 { font-family: "Chakra Petch", sans-serif; font-weight: 700; font-size: 28px; line-height: 1.05; margin: 0 0 14px; text-wrap: balance; letter-spacing: .01em; }
+h2 .n { color: var(--accent-ink); margin-right: .35em; font-variant-numeric: tabular-nums; }
+h3 { font-family: "Chakra Petch", sans-serif; font-weight: 600; font-size: 17px; letter-spacing: .02em; margin: 22px 0 6px; }
+
+.steps { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 14px; counter-reset: step; }
+.steps > li { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 12px; margin: 0; }
+.steps > li::before { counter-increment: step; content: "3." counter(step); font-family: "Chakra Petch", sans-serif; font-weight: 700; font-size: 20px; color: var(--accent-ink); line-height: 1.3; font-variant-numeric: tabular-nums; }
+.steps h3 { margin: 0 0 4px; font-size: 18px; }
+.steps p, .steps ul { margin-bottom: 6px; }
+
+.rule { background: var(--note-bg); border: 1px solid var(--note-line); border-left: 4px solid var(--accent); padding: 12px 16px; border-radius: 6px; margin: 14px 0; }
+.rule p { margin: 0; }
+
+table { border-collapse: collapse; width: 100%; margin: 6px 0 16px; font-size: 15.5px; }
+th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: "Chakra Petch", sans-serif; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: 12px; color: var(--ink-2); }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tablewrap { overflow-x: auto; }
+
+.zone { display: inline-block; width: .8em; height: .8em; border: 2px solid; margin-right: .35em; vertical-align: -1px; }
+.zone.start { border-color: var(--start); }
+.zone.finish { border-color: var(--finish); }
+.cmd { display: flex; flex-direction: column; gap: 6px; margin: 0 0 14px; }
+.cmd small { color: var(--ink-2); }
+
+dl.trouble { margin: 0; display: grid; grid-template-columns: 1fr; gap: 10px; }
+dl.trouble div { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--paper); }
+dl.trouble dt { font-weight: 600; margin: 0; }
+dl.trouble dd { margin: 0; color: var(--ink-2); }
+
+/* ---- difficulty page ---- */
+.tiers { display: grid; gap: 10px; margin: 0 0 12px; padding: 0; list-style: none; }
+.tier { background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--c); border-radius: 6px; padding: 12px 16px; margin: 0; }
+.tier .head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+.tier b { font-family: "Chakra Petch", sans-serif; font-weight: 700; letter-spacing: .1em; font-size: 14px; color: var(--c); }
+.tier .who { font-weight: 600; }
+.tier .nums { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 3px; color: var(--ink-2); }
+.tier .nums li { display: grid; grid-template-columns: 26px 1fr; gap: 10px; margin: 0; }
+.tier .nums .n { font-family: "Chakra Petch", sans-serif; font-weight: 700; color: var(--ink); text-align: right; font-variant-numeric: tabular-nums; }
+.easy { --c: var(--easy); } .medium { --c: var(--medium); } .hard { --c: var(--hard); } .insane { --c: var(--insane); }
+.rules { margin: 0 0 12px; padding-left: 1.2em; display: grid; gap: 8px; }
+.rules li::marker { color: var(--accent-ink); font-weight: 600; }
+.how { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
+
+footer.site-foot { max-width: 1120px; margin: 40px auto 0; padding-top: 16px; border-top: 1px solid var(--line); font-family: "Chakra Petch", sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); }
+
+@media (max-width: 800px) {
+  .frame { grid-template-columns: 1fr; gap: 20px; }
+  nav.toc { position: static; }
+  nav.toc ol { flex-direction: row; flex-wrap: wrap; gap: 4px 10px; }
+  nav.toc a { border-left: 0; padding: 2px 0; }
+  nav.toc .n { width: auto; margin-right: .3em; }
+  .site .mark small { display: none; }
+}
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
