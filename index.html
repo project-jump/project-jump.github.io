@@ -51,20 +51,20 @@
 
 <section id="layout">
   <h2><span class="n">2</span>How a map is organised <span style="font-weight:600;color:var(--ink-2);font-size:.6em">read this first</span></h2>
-  <p>Unreal calls the container a <strong>plugin</strong>; think of it as <strong>your mod folder</strong>. One mod folder holds one map (or several), plus every asset those maps use. The mod folder's name is what the game knows you by, so you create it once and never rename it. The map inside it is a normal Unreal level file. Names can be the same; here the mod is <code>SkyBounce</code> and so is the map:</p>
+  <p>Unreal calls the container a <strong>plugin</strong>; think of it as <strong>your mod folder</strong>. One mod folder holds one map (or several), plus every asset those maps use. The mod folder's name is what the game knows you by, so you create it once and never rename it. The map inside it is a normal Unreal level file. Names can be the same; here the mod is <code>YourMapName</code> and so is the map. <code>YourMapName</code> is a placeholder: wherever you see it in this guide, use your own name instead.</p>
 <pre><code>JumperMapKit\
   project_jump.uproject          <span class="c">&lt;- the kit (never edit this)</span>
   Content\                       <span class="c">&lt;- the game's own assets: use them, don't change them</span>
   Plugins\
-    <span class="you">SkyBounce\</span>                   <span class="c">&lt;- YOUR MOD FOLDER (the "plugin"), made once in step 3.2</span>
-      SkyBounce.uplugin          <span class="c">&lt;- made for you</span>
-      Content\                   <span class="c">&lt;- shows in the Content Browser as "SkyBounce Content"</span>
+    <span class="you">YourMapName\</span>                   <span class="c">&lt;- YOUR MOD FOLDER (the "plugin"), made once in step 3.2</span>
+      YourMapName.uplugin          <span class="c">&lt;- made for you</span>
+      Content\                   <span class="c">&lt;- shows in the Content Browser as "YourMapName Content"</span>
         Maps\
-          <span class="you">SkyBounce.umap</span>         <span class="c">&lt;- your level, step 3.4</span>
+          <span class="you">YourMapName.umap</span>         <span class="c">&lt;- your level, step 3.4</span>
         Meshes\                  <span class="c">&lt;- anything you import or create: your choice of folders</span>
         Materials\
         Textures\</code></pre>
-  <div class="rule"><p><strong>Rule of thumb:</strong> if it isn't under <code>Plugins\SkyBounce\Content</code>, it won't be in your map when someone else plays it. The one exception is the kit's <code>Content</code> folder: those are the game's assets and every player already has them.</p></div>
+  <div class="rule"><p><strong>Rule of thumb:</strong> if it isn't under <code>Plugins\YourMapName\Content</code>, it won't be in your map when someone else plays it. The one exception is the kit's <code>Content</code> folder: those are the game's assets and every player already has them.</p></div>
 </section>
 
 <section id="start">
@@ -72,12 +72,12 @@
   <ol class="steps">
     <li><div><h3>Open the kit</h3><p>Double-click <code>project_jump.uproject</code>. The first open compiles shaders and takes a few minutes. If the editor offers to rebuild modules, say <strong>No</strong>: that means the wrong engine version.</p></div></li>
     <li><div><h3>Make your mod folder (once)</h3><p>Menu <strong>Edit → Plugins</strong>. In the Plugins window click <strong>+ Add</strong> (top left). Pick the <strong>Content Only</strong> template. Fill in:</p>
-      <ul><li><strong>Plugin Name</strong>: letters and digits only, no spaces: <code>SkyBounce</code>. This is the name forever (leaderboards, Workshop, the game's map list all hang off it).</li><li><strong>Author</strong>: you. Everything else can stay as it is.</li></ul>
+      <ul><li><strong>Plugin Name</strong>: letters and digits only, no spaces: <code>YourMapName</code>. This is the name forever (leaderboards, Workshop, the game's map list all hang off it).</li><li><strong>Author</strong>: you. Everything else can stay as it is.</li></ul>
       <p>Click <strong>Create Plugin</strong>. No restart is needed. Close the Plugins window.</p></div></li>
-    <li><div><h3>See it in the Content Browser</h3><p>Open the Content Browser (<strong>Window → Content Browser</strong> if it isn't already at the bottom). Click its <strong>Settings</strong> button (top right of the browser) and tick <strong>Show Plugin Content</strong>. In the left-hand tree, below <code>Content</code>, you now see <strong>SkyBounce Content</strong>. Right-click it → <strong>New Folder</strong> → <code>Maps</code>.</p></div></li>
-    <li><div><h3>Make the level</h3><p>Menu <strong>File → New Level</strong> → <strong>Basic</strong> (floor, light, sky; easiest to start from) or <strong>Empty Level</strong>. Then <strong>File → Save Current Level As...</strong>: in the dialog, navigate into <strong>SkyBounce Content → Maps</strong>, name it <code>SkyBounce</code>, Save. Check the tab title at the top of the viewport now says <code>SkyBounce</code>. Don't name a map after a shipped one (<code>Aquatic</code>, <code>JumpLevel2</code>, <code>Tutorial</code>, <code>MainMenu</code>).</p></div></li>
+    <li><div><h3>See it in the Content Browser</h3><p>Open the Content Browser (<strong>Window → Content Browser</strong> if it isn't already at the bottom). Click its <strong>Settings</strong> button (top right of the browser) and tick <strong>Show Plugin Content</strong>. In the left-hand tree, below <code>Content</code>, you now see <strong>YourMapName Content</strong>. Right-click it → <strong>New Folder</strong> → <code>Maps</code>.</p></div></li>
+    <li><div><h3>Make the level</h3><p>Menu <strong>File → New Level</strong> → <strong>Basic</strong> (floor, light, sky; easiest to start from) or <strong>Empty Level</strong>. Then <strong>File → Save Current Level As...</strong>: in the dialog, navigate into <strong>YourMapName Content → Maps</strong>, name it <code>YourMapName</code>, Save. Check the tab title at the top of the viewport now says <code>YourMapName</code>. Don't name a map after a shipped one (<code>Aquatic</code>, <code>JumpLevel2</code>, <code>Tutorial</code>, <code>MainMenu</code>).</p></div></li>
     <li><div><h3>Player Start</h3><p>Open the <strong>Place Actors</strong> panel (<strong>Window → Place Actors</strong>), search "Player Start", drag it onto your floor. Rotate it to face the way players should look on spawn. Without it the game can't spawn anyone.</p></div></li>
-    <li><div><h3>Build</h3><p>Add geometry (section 4 says what the movement needs from it). When you import meshes or textures, or create materials, do it with your <strong>SkyBounce Content</strong> folder selected in the Content Browser so they land inside your mod. If something ends up in the kit's <code>Content</code> by mistake, right-click it → <strong>Move</strong> into your folder.</p></div></li>
+    <li><div><h3>Build</h3><p>Add geometry (section 4 says what the movement needs from it). When you import meshes or textures, or create materials, do it with your <strong>YourMapName Content</strong> folder selected in the Content Browser so they land inside your mod. If something ends up in the kit's <code>Content</code> by mistake, right-click it → <strong>Move</strong> into your folder.</p></div></li>
     <li><div><h3>Play</h3><p>Press <strong>Play</strong> (the ▶ button in the toolbar). That is the real game: real movement, HUD, saves, timer, RPG. <kbd>Esc</kbd> opens the pause menu (CONTROLS shows every bind), <kbd>~</kbd> opens the console. Save the level (<kbd>Ctrl</kbd>+<kbd>S</kbd>) as you go.</p></div></li>
     <li><div><h3>Package it</h3><p>When it plays right, package it (section 7) and it appears in the game's map list.</p></div></li>
   </ol>
@@ -163,8 +163,8 @@
 <section id="package">
   <h2><span class="n">7</span>Package it</h2>
   <p>Open a PowerShell window in the kit folder (<kbd>Shift</kbd> + right-click the folder → "Open PowerShell window here") and run:</p>
-  <div class="cmd"><pre><code>Tools\PackageMod.ps1 -Name SkyBounce -Install</code></pre></div>
-  <p>It validates your Blueprints, cooks your plugin against the game's shipped content (so your package holds only your assets), writes <code>Saved\Mods\SkyBounce\</code>, and with <code>-Install</code> copies it to <code>%LOCALAPPDATA%\project_jump\Mods\SkyBounce\</code>. Launch the game from Steam: your map is in <strong>PLAY</strong>, with a CUSTOM tag on its card.</p>
+  <div class="cmd"><pre><code>Tools\PackageMod.ps1 -Name YourMapName -Install</code></pre></div>
+  <p>It validates your Blueprints, cooks your plugin against the game's shipped content (so your package holds only your assets), writes <code>Saved\Mods\YourMapName\</code>, and with <code>-Install</code> copies it to <code>%LOCALAPPDATA%\project_jump\Mods\YourMapName\</code>. Launch the game from Steam: your map is in <strong>PLAY</strong>, with a CUSTOM tag on its card.</p>
   <p>The first cook takes a while (shaders). Later cooks are quick. Re-run after every change you want to test in the real game; the editor's Play button is for everything before that.</p>
   <h3>A second map, later</h3>
   <p>The command packages one mod folder — the plugin you name. The kit can hold as many as you like side by side, so a new map is a new plugin: <code>Plugins\SecondMap</code>, build the level there, <code>PackageMod.ps1 -Name SecondMap -Install</code>, publish. It gets its own Workshop item, page, picture and rating; the first map is untouched. (Adding a second level inside the same plugin also works — one item then carries both maps, which suits a map pack, not two unrelated maps.) Never rename a plugin: the name is how the game and the Workshop know your mod.</p>
@@ -174,7 +174,7 @@
   <h2><span class="n">8</span>Share it on the Steam Workshop</h2>
   <h3>Write the Workshop page</h3>
   <p>The first time you package, the script creates a <code>Workshop</code> folder in your plugin:</p>
-<pre><code>Plugins\SkyBounce\Workshop\
+<pre><code>Plugins\YourMapName\Workshop\
   workshop.txt     <span class="c">the page: title, tags, visibility, description</span>
   preview.png      <span class="c">the thumbnail in the Workshop list (you add it; under 1 MB, 16:9 looks best)</span>
   Screenshots\     <span class="c">the gallery (you add them; .png or .jpg)</span></code></pre>
@@ -207,7 +207,7 @@ one for people who hate themselves.</code></pre>
   <p>Press Subscribe on a map's Workshop page — <strong>WORKSHOP → DOWNLOAD → BROWSE THE WORKSHOP</strong> opens it in the Steam overlay. The map downloads through Steam and appears in <strong>PLAY</strong> within a few seconds, with a WORKSHOP tag on its card. The DOWNLOAD tab lists what you're subscribed to, with its download state, and lets you unsubscribe.</p>
   <p><strong>Packaged maps only load in the packaged game.</strong> A Workshop map (or one installed with <code>-Install</code>) is a package; the kit's editor plays from loose files and can't mount packages, so it lists none of them. Test packaged maps in the game itself.</p>
   <h3>Without the Workshop</h3>
-  <p>Zip your mod folder (<code>Saved\Mods\SkyBounce\</code> in the kit) and send it. Anyone who drops the folder into <code>%LOCALAPPDATA%\project_jump\Mods\</code> sees the map.</p>
+  <p>Zip your mod folder (<code>Saved\Mods\YourMapName\</code> in the kit) and send it. Anyone who drops the folder into <code>%LOCALAPPDATA%\project_jump\Mods\</code> sees the map.</p>
 </section>
 
 <section id="mp">
