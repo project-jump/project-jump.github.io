@@ -101,7 +101,20 @@
   </table></div>
   <p>Good strafing adds a lot to the jump distance. Set the custom grid under Editor Preferences → Level Editor → Viewports → Grid Snapping ("Decimal" sizes), or just type sizes in the Details panel.</p>
   <h3>Collision</h3>
-  <p><strong>Anything the player stands on, jumps between or bounces off needs simple collision, and box collision is the shape the movement understands best.</strong> Static meshes with an unrotated box collision are read at map load into movement brushes; on those, elevators and bounces behave exactly as intended, and lineups are repeatable. Rotated boxes, capsules, spheres and complex/per-triangle collision still work as walls and floors but through the engine's own collision, so no elevators there. Check a mesh with <strong>Show → Collision</strong> in the viewport; open the mesh and use <strong>Collision → Add Box Simplified Collision</strong> if it has none.</p>
+  <p><strong>Anything the player stands on, jumps from, jumps along or bounces off needs simple collision made of boxes or convex hulls.</strong> Those are read at map load into movement brushes; on brushes, elevators and bounces behave exactly as intended, and lineups are repeatable. Rotated boxes (ramps, 45° sections) and convex hulls are brushes too, with angled faces. What can't become a brush goes through the engine's own collision instead:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Collision on the mesh</th><th>What the movement does</th><th>Feel</th></tr></thead>
+    <tbody>
+      <tr><td>Box, any rotation</td><td>movement brush</td><td>clean, elevators work</td></tr>
+      <tr><td>Convex hull</td><td>movement brush (angled faces)</td><td>clean, elevators work</td></tr>
+      <tr><td>Sphere, capsule</td><td>engine collision (whole mesh)</td><td>fine for props, no elevators</td></tr>
+      <tr><td>Per-triangle ("complex as simple")</td><td>engine collision</td><td>can catch and stick on edges</td></tr>
+      <tr><td>Geometry brushes (BSP: Box Brush etc.)</td><td>engine collision</td><td>same as per-triangle</td></tr>
+    </tbody>
+  </table></div>
+  <p>One mesh is all or nothing: if any collision shape on it can't be a brush (a sphere or capsule), the <strong>whole</strong> mesh uses engine collision. Keep curved shapes on props you don't jump on.</p>
+  <p>Check a mesh with <strong>Show → Collision</strong> in the viewport. Cube-grid and other Modeling Mode meshes often end up with per-triangle collision, and a flat wall made that way is many small faces the player catches on mid-air: it "surfs" along instead of dropping. Open the mesh, <strong>Collision → Remove Collision</strong>, then <strong>Collision → Add Box Simplified Collision</strong> (or a convex collision); build anything that isn't one box from several boxes. Geometry brushes: select one, <strong>Brush Settings → Create Static Mesh</strong>, then give the mesh a box. Don't tick "Use Complex Collision As Simple" on anything you jump on.</p>
+  <p>To see what the movement did with your map: Play, open the Output Log and filter on <code>CmWorld</code>. Every converted mesh gets a line with its brush count, and every mesh it skipped gets a line saying why (e.g. "complex-as-simple", "sphere/capsule collision", "not convex"). Each skipped mesh is a surface on the engine path.</p>
   <ul>
     <li><strong>Bounces</strong> are the point of a jump map: a bounce is a fast diagonal landing on the edge of a box, so build bounce surfaces from clean boxes with edges on the grid.</li>
     <li><strong>Keep whole-unit sizes</strong> for ledges you intend to be exact: a 2.54 cm grid multiple. The loader snaps to a 1/16-unit grid, so small errors are forgiven, but don't build on random decimals if you want a known jump to be a known jump.</li>
@@ -162,12 +175,14 @@
 
 <section id="package">
   <h2><span class="n">7</span>Package it</h2>
-  <p>Open a PowerShell window in the kit folder (<kbd>Shift</kbd> + right-click the folder → "Open PowerShell window here") and run:</p>
-  <div class="cmd"><pre><code>Tools\PackageMod.ps1 -Name YourMapName -Install</code></pre></div>
+  <p>Easiest: double-click <code>Tools\PackageMod.cmd</code>, type your plugin's name when it asks, done.</p>
+  <p>Or open a PowerShell window in the kit folder (the one that contains <code>Tools</code>; <kbd>Shift</kbd> + right-click the folder → "Open PowerShell window here") and run:</p>
+  <div class="cmd"><pre><code>Tools\PackageMod.cmd -Name YourMapName -Install</code></pre></div>
+  <p>(<code>PackageMod.cmd</code> runs <code>PackageMod.ps1</code> for you. Windows refuses to run <code>.ps1</code> files directly until you allow it — if you'd rather call the <code>.ps1</code>, run <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code> once first.)</p>
   <p>It validates your Blueprints, cooks your plugin against the game's shipped content (so your package holds only your assets), writes <code>Saved\Mods\YourMapName\</code>, and with <code>-Install</code> copies it to <code>%LOCALAPPDATA%\project_jump\Mods\YourMapName\</code>. Launch the game from Steam: your map is in <strong>PLAY</strong>, with a CUSTOM tag on its card.</p>
   <p>The first cook takes a while (shaders). Later cooks are quick. Re-run after every change you want to test in the real game; the editor's Play button is for everything before that.</p>
   <h3>A second map, later</h3>
-  <p>The command packages one mod folder — the plugin you name. The kit can hold as many as you like side by side, so a new map is a new plugin: <code>Plugins\SecondMap</code>, build the level there, <code>PackageMod.ps1 -Name SecondMap -Install</code>, publish. It gets its own Workshop item, page, picture and rating; the first map is untouched. (Adding a second level inside the same plugin also works — one item then carries both maps, which suits a map pack, not two unrelated maps.) Never rename a plugin: the name is how the game and the Workshop know your mod.</p>
+  <p>The command packages one mod folder — the plugin you name. The kit can hold as many as you like side by side, so a new map is a new plugin: <code>Plugins\SecondMap</code>, build the level there, <code>Tools\PackageMod.cmd -Name SecondMap -Install</code>, publish. It gets its own Workshop item, page, picture and rating; the first map is untouched. (Adding a second level inside the same plugin also works — one item then carries both maps, which suits a map pack, not two unrelated maps.) Never rename a plugin: the name is how the game and the Workshop know your mod.</p>
 </section>
 
 <section id="share">
@@ -223,7 +238,7 @@ one for people who hate themselves.</code></pre>
 
 <section id="updates">
   <h2><span class="n">10</span>When the game updates</h2>
-  <p>A game update that changes shipped content comes with a new kit (a new <code>Releases\&lt;version&gt;</code> folder inside it). Re-run <code>PackageMod.ps1</code> from the new kit to re-cook your map; the map itself does not change. Packages cooked against an old release may reference things the new game no longer has.</p>
+  <p>A game update that changes shipped content comes with a new kit (a new <code>Releases\&lt;version&gt;</code> folder inside it). Re-run <code>PackageMod.cmd</code> from the new kit to re-cook your map; the map itself does not change. Packages cooked against an old release may reference things the new game no longer has.</p>
 </section>
 
 <section id="trouble">
@@ -231,11 +246,12 @@ one for people who hate themselves.</code></pre>
   <dl class="trouble">
     <div><dt>The editor asks to rebuild modules / "missing modules"</dt><dd>Wrong engine version. The kit needs 5.8.x.</dd></div>
     <div><dt>My plugin folder isn't in the Content Browser</dt><dd>Settings → Show Plugin Content.</dd></div>
-    <div><dt>Map not listed in the game</dt><dd>Check <code>%LOCALAPPDATA%\project_jump\Saved\Logs\project_jump.log</code> for lines starting <code>LogJumperMods</code>. "no .pak files" means the cook did not produce output; "no maps.json" means the mod folder is incomplete: re-run <code>PackageMod.ps1</code>.</dd></div>
+    <div><dt>Map not listed in the game</dt><dd>Check <code>%LOCALAPPDATA%\project_jump\Saved\Logs\project_jump.log</code> for lines starting <code>LogJumperMods</code>. "no .pak files" means the cook did not produce output; "no maps.json" means the mod folder is incomplete: re-run <code>PackageMod.cmd</code>.</dd></div>
     <div><dt>"MOD BLOCKED" in the game, or the package step fails with MODCHECK lines</dt><dd>A Blueprint uses a blocked node; the line names it. Remove that node.</dd></div>
     <div><dt>Missing textures / grey materials in the game but fine in the editor</dt><dd>An asset lives outside your plugin. Move it in and re-package.</dd></div>
     <div><dt>The player falls through my floor</dt><dd>The mesh has no simple collision, or the collision is per-triangle ("Use Complex as Simple"). Add a box collision.</dd></div>
-    <div><dt>Elevators/bounces feel wrong on one platform</dt><dd>Its collision is rotated or not a box.</dd></div>
+    <div><dt>The player sticks to a flat wall and slides along it</dt><dd>The wall isn't a brush to the movement (per-triangle cube-grid mesh, geometry brush). See the collision table in section 3; the <code>CmWorld</code> log lines name the culprits.</dd></div>
+    <div><dt>Elevators/bounces feel wrong on one platform</dt><dd>Its collision isn't a brush (per-triangle, or a sphere/capsule somewhere on the mesh). Check its <code>CmWorld</code> line.</dd></div>
     <div><dt>The WORKSHOP page says Steam refused</dt><dd>The game must be running through Steam, logged in to the account that owns it. If it names an agreement, accept the Workshop agreement on the item's page.</dd></div>
     <div><dt>My map isn't on the WORKSHOP page, or says NEEDS ATTENTION</dt><dd>Package with <code>-Install</code>, then press REFRESH. The page lists what's missing (usually the description in <code>workshop.txt</code>).</dd></div>
     <div><dt>A subscribed map doesn't show up</dt><dd>Steam may still be downloading it; give it a minute, or restart the game. If it still doesn't appear, the map was published for an older game version: ask the mapper to re-package from the current kit and publish again.</dd></div>
