@@ -92,8 +92,8 @@
     <thead><tr><th>Thing</th><th>Game units</th><th>cm</th></tr></thead>
     <tbody>
       <tr><td>Player, standing</td><td class="num">70</td><td class="num">178</td></tr>
-      <tr><td>Player, crouched</td><td class="num">40</td><td class="num">102</td></tr>
-      <tr><td>Player radius</td><td class="num">≈13.4</td><td class="num">34</td></tr>
+      <tr><td>Player, crouched</td><td class="num">50</td><td class="num">127</td></tr>
+      <tr><td>Player radius</td><td class="num">15</td><td class="num">38.1</td></tr>
       <tr><td>Standing jump, height reached</td><td class="num">≈39</td><td class="num">≈99</td></tr>
       <tr><td>Sprint jump on flat ground, no strafing</td><td class="num">≈180</td><td class="num">≈450</td></tr>
       <tr><td>Useful editor grid</td><td class="num">4 or 10</td><td class="num">10.16 or 25.4</td></tr>
@@ -117,6 +117,7 @@
   <p>To see what the movement did with your map: Play, open the Output Log and filter on <code>CmWorld</code>. Every converted mesh gets a line with its brush count, and every mesh it skipped gets a line saying why (e.g. "complex-as-simple", "sphere/capsule collision", "not convex"). Each skipped mesh is a surface on the engine path.</p>
   <ul>
     <li><strong>Bounces</strong> are the point of a jump map: a bounce is a fast diagonal landing on the edge of a box, so build bounce surfaces from clean boxes with edges on the grid.</li>
+    <li><strong>Ice (slick surfaces):</strong> give the mesh, or its actor, the tag <code>Slick</code> (Details panel → Tags: Component Tags on the mesh, or the actor's Tags). On a slick surface the player has no ground friction and almost no grip, and gravity keeps pulling while they stand on it, so a slick slope slides them downhill and speeds them up. Jumping off it works as normal. It works on brushes and engine collision alike, and is read when the map loads.</li>
     <li><strong>Keep whole-unit sizes</strong> for ledges you intend to be exact: a 2.54 cm grid multiple. The loader snaps to a 1/16-unit grid, so small errors are forgiven, but don't build on random decimals if you want a known jump to be a known jump.</li>
     <li><strong>Falling</strong> does not kill or respawn anyone, and don't make it: leave <strong>Kill Z</strong> in World Settings at its default (a map that sets it destroys the player with no respawn). Players save and load positions, jump-server style (Save Position = <kbd>V</kbd>, Load Position = <kbd>F</kbd> by default), so design for that: obvious save spots, no soft-locks.</li>
     <li><strong>Scale test early.</strong> Drop a Player Start on your first platform and play: the pawn is the ruler. Ten minutes of jumping tells you more than any number here.</li>
