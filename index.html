@@ -107,6 +107,7 @@
     <tbody>
       <tr><td>Box, any rotation</td><td>movement brush</td><td>clean, elevators work</td></tr>
       <tr><td>Convex hull</td><td>movement brush (angled faces)</td><td>clean, elevators work</td></tr>
+      <tr><td>Blocking Volume</td><td>movement brush (each convex piece)</td><td>clean, elevators work</td></tr>
       <tr><td>Sphere, capsule</td><td>engine collision (whole mesh)</td><td>fine for props, no elevators</td></tr>
       <tr><td>Per-triangle ("complex as simple")</td><td>engine collision</td><td>can catch and stick on edges</td></tr>
       <tr><td>Geometry brushes (BSP: Box Brush etc.)</td><td>engine collision</td><td>same as per-triangle</td></tr>
@@ -114,7 +115,8 @@
   </table></div>
   <p>One mesh is all or nothing: if any collision shape on it can't be a brush (a sphere or capsule), the <strong>whole</strong> mesh uses engine collision. Keep curved shapes on props you don't jump on.</p>
   <p>Check a mesh with <strong>Show → Collision</strong> in the viewport. Cube-grid and other Modeling Mode meshes often end up with per-triangle collision, and a flat wall made that way is many small faces the player catches on mid-air: it "surfs" along instead of dropping. Open the mesh, <strong>Collision → Remove Collision</strong>, then <strong>Collision → Add Box Simplified Collision</strong> (or a convex collision); build anything that isn't one box from several boxes. Geometry brushes: select one, <strong>Brush Settings → Create Static Mesh</strong>, then give the mesh a box. Don't tick "Use Complex Collision As Simple" on anything you jump on.</p>
-  <p>To see what the movement did with your map: Play, open the Output Log and filter on <code>CmWorld</code>. Every converted mesh gets a line with its brush count, and every mesh it skipped gets a line saying why (e.g. "complex-as-simple", "sphere/capsule collision", "not convex"). Each skipped mesh is a surface on the engine path.</p>
+  <p>Blocking Volumes count as brushes too, so an invisible wall or a smoothed-out bounce made from one plays exactly like a box.</p>
+  <p>To see what the movement did with your map: Play, open the Output Log and filter on <code>CmWorld</code>. Every converted mesh or volume with angled faces gets a line with its brush count and where it is, every mesh it skipped gets a line saying why (e.g. "complex-as-simple", "sphere/capsule collision", "not convex"), and one line counts the Blocking Volumes. Each skipped mesh is a surface on the engine path.</p>
   <ul>
     <li><strong>Bounces</strong> are the point of a jump map: a bounce is a fast diagonal landing on the edge of a box, so build bounce surfaces from clean boxes with edges on the grid.</li>
     <li><strong>Ice (slick surfaces):</strong> give the mesh, or its actor, the tag <code>Slick</code> (Details panel → Tags: Component Tags on the mesh, or the actor's Tags). On a slick surface the player has no ground friction and almost no grip, and gravity keeps pulling while they stand on it, so a slick slope slides them downhill and speeds them up. Jumping off it works as normal. It works on brushes and engine collision alike, and is read when the map loads.</li>
