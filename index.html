@@ -17,322 +17,431 @@
 <header class="masthead">
   <div class="eyebrow">Mapping guide · Unreal Engine 5.8 · Map Kit 1.0</div>
   <h1>project_jump Map Kit</h1>
-  <p class="lede">Make a map, play it with the real movement in the editor, package it, share it. This is the whole workflow; nothing here needs code.</p>
+  <p class="lede">Make a map, play it with the real movement in the editor, package it, share it. No code needed. <strong>New here? Read the six rules below, then follow the Quick start.</strong></p>
 </header>
 
 <div class="frame">
 <nav class="toc" aria-label="Sections">
-  <div class="label">Sections</div>
+  <a class="first" href="#rules">Read this first</a>
+  <div class="label">Get started</div>
   <ol>
     <li><a href="#need"><span class="n">1</span>What you need</a></li>
-    <li><a href="#layout"><span class="n">2</span>How a map is organised</a></li>
+    <li><a href="#layout"><span class="n">2</span>Your plugin folder</a></li>
     <li><a href="#start"><span class="n">3</span>Quick start</a></li>
-    <li><a href="#movement"><span class="n">4</span>Building for the movement</a></li>
-    <li><a href="#timer"><span class="n">5</span>Timer zones</a></li>
+  </ol>
+  <div class="label">Build</div>
+  <ol>
+    <li><a href="#movement"><span class="n">4</span>Collision and sizes</a></li>
+    <li><a href="#timer"><span class="n">5</span>Timer zones, map card</a></li>
     <li><a href="#bp"><span class="n">6</span>Blueprints</a></li>
+  </ol>
+  <div class="label">Ship</div>
+  <ol>
     <li><a href="#package"><span class="n">7</span>Package it</a></li>
     <li><a href="#share"><span class="n">8</span>Steam Workshop</a></li>
     <li><a href="#mp"><span class="n">9</span>Multiplayer</a></li>
     <li><a href="#updates"><span class="n">10</span>Game updates</a></li>
+  </ol>
+  <div class="label">Help</div>
+  <ol>
     <li><a href="#trouble"><span class="n">11</span>Troubleshooting</a></li>
   </ol>
 </nav>
 
 <main>
+<section id="rules" class="must">
+  <h2>Read this first</h2>
+  <p class="sub">Six rules. Most stuck maps broke one of them.</p>
+  <ol>
+    <li><strong>Use Unreal Engine 5.8.</strong> Asked to rebuild modules? Say <strong>No</strong>: wrong version. <a href="#need">More</a></li>
+    <li><strong>Keep everything in your map's plugin folder</strong> (<strong>YourPluginName Content</strong> in the Content Browser). Fab and Megascans imports get moved there for you when you package. <a href="#layout">More</a></li>
+    <li><strong>Never rename your plugin.</strong> Leaderboards and the Workshop use its name.</li>
+    <li><strong>Give everything players jump on box or convex collision.</strong> With "complex as simple" collision or BSP brushes, players can get stuck on edges and walls. <a href="#movement">More</a></li>
+    <li><strong>Add a Player Start</strong>, plus a Start and a Finish timer zone. <a href="#timer">More</a></li>
+    <li><strong>Test with Play in the editor as you build.</strong> When the map is finished, package it with <code>Tools\PackageMod.cmd</code> and give it a final check in the game from Steam. <a href="#package">More</a></li>
+  </ol>
+</section>
+
 <section id="need">
   <h2><span class="n">1</span>What you need</h2>
   <ul>
-    <li><strong>Unreal Engine 5.8</strong> from the Epic Games Launcher (Library → Engine Versions → +). Any 5.8.x is fine; 5.7 or older will not open the kit. Nothing else from Epic, and no Visual Studio: the game ships in the kit as a compiled module, the editor just loads it.</li>
-    <li><strong>The kit</strong>, unzipped somewhere short, e.g. <code>D:\JumperMapKit</code>. Keep it off OneDrive-style synced folders.</li>
-    <li><strong>The game</strong> installed from Steam, to play your packaged map outside the editor.</li>
+    <li><strong>Unreal Engine 5.8</strong> from the Epic Games Launcher (Library → Engine Versions → +). Any 5.8.x works; 5.7 or older won't open the kit.</li>
+    <li><strong>The kit</strong>, unzipped to a short path like <code>D:\JumperMapKit</code>. Not in OneDrive or any other synced folder.</li>
+    <li><strong>The game</strong> from Steam, to play your packaged map.</li>
   </ul>
 </section>
 
 <section id="layout">
-  <h2><span class="n">2</span>How a map is organised <span style="font-weight:600;color:var(--ink-2);font-size:.6em">read this first</span></h2>
-  <p>Unreal calls the container a <strong>plugin</strong>; think of it as <strong>your mod folder</strong>. One mod folder holds one map (or several), plus every asset those maps use. The mod folder's name is what the game knows you by, so you create it once and never rename it. The map inside it is a normal Unreal level file. Names can be the same; here the mod is <code>YourMapName</code> and so is the map. <code>YourMapName</code> is a placeholder: wherever you see it in this guide, use your own name instead.</p>
+  <h2><span class="n">2</span>Your plugin folder</h2>
+  <p>Your map lives in its own <strong>plugin</strong>: a folder under <code>Plugins\</code> that holds your level (or several) and every asset they use.</p>
+  <p>In this guide, <code>YourPluginName</code> stands for your plugin's name and <code>YourMapName</code> for your level's. Use your own names; they can be the same.</p>
 <pre><code>JumperMapKit\
   project_jump.uproject          <span class="c">&lt;- the kit (never edit this)</span>
   Content\                       <span class="c">&lt;- the game's own assets: use them, don't change them</span>
   Plugins\
-    <span class="you">YourMapName\</span>                   <span class="c">&lt;- YOUR MOD FOLDER (the "plugin"), made once in step 3.2</span>
-      YourMapName.uplugin          <span class="c">&lt;- made for you</span>
-      Content\                   <span class="c">&lt;- shows in the Content Browser as "YourMapName Content"</span>
+    <span class="you">YourPluginName\</span>              <span class="c">&lt;- YOUR PLUGIN FOLDER, made once in step 3.2</span>
+      YourPluginName.uplugin     <span class="c">&lt;- made for you</span>
+      Content\                   <span class="c">&lt;- shows in the Content Browser as "YourPluginName Content"</span>
         Maps\
-          <span class="you">YourMapName.umap</span>         <span class="c">&lt;- your level, step 3.4</span>
+          <span class="you">YourMapName.umap</span>       <span class="c">&lt;- your level, step 3.4</span>
         Meshes\                  <span class="c">&lt;- anything you import or create: your choice of folders</span>
         Materials\
         Textures\</code></pre>
-  <div class="rule"><p><strong>Rule:</strong> everything you add goes under <code>Plugins\YourMapName\Content</code>. The kit's own <code>Content</code> folder holds the game's assets — use them freely, every player already has them — but don't put your own things there: the package step stops and lists anything of yours it finds in it.</p></div>
+  <div class="rule"><p><strong>Rule:</strong> everything you add goes under <code>Plugins\YourPluginName\Content</code>. The kit's own <code>Content</code> folder is the game's assets: use them freely (every player has them), but don't add yours there.</p></div>
 </section>
 
 <section id="start">
   <h2><span class="n">3</span>Quick start</h2>
   <ol class="steps">
-    <li><div><h3>Open the kit</h3><p>Double-click <code>project_jump.uproject</code>. The first open compiles shaders and takes a few minutes. If the editor offers to rebuild modules, say <strong>No</strong>: that means the wrong engine version.</p></div></li>
-    <li><div><h3>Make your mod folder (once)</h3><p>Menu <strong>Edit → Plugins</strong>. In the Plugins window click <strong>+ Add</strong> (top left). Pick the <strong>Content Only</strong> template. Fill in:</p>
-      <ul><li><strong>Plugin Name</strong>: letters and digits only, no spaces: <code>YourMapName</code>. This is the name forever (leaderboards, Workshop, the game's map list all hang off it).</li><li><strong>Author</strong>: you. Everything else can stay as it is.</li></ul>
-      <p>Click <strong>Create Plugin</strong>. No restart is needed. Close the Plugins window.</p></div></li>
-    <li><div><h3>See it in the Content Browser</h3><p>Open the Content Browser (<strong>Window → Content Browser</strong> if it isn't already at the bottom). Click its <strong>Settings</strong> button (top right of the browser) and tick <strong>Show Plugin Content</strong>. In the left-hand tree, below <code>Content</code>, you now see <strong>YourMapName Content</strong>. Right-click it → <strong>New Folder</strong> → <code>Maps</code>.</p></div></li>
-    <li><div><h3>Make the level</h3><p>Menu <strong>File → New Level</strong> → <strong>Basic</strong> (floor, light, sky; easiest to start from) or <strong>Empty Level</strong>. Then <strong>File → Save Current Level As...</strong>: in the dialog, navigate into <strong>YourMapName Content → Maps</strong>, name it <code>YourMapName</code>, Save. Check the tab title at the top of the viewport now says <code>YourMapName</code>. Don't name a map after a shipped one (<code>Aquatic</code>, <code>JumpLevel2</code>, <code>Tutorial</code>, <code>MainMenu</code>).</p></div></li>
-    <li><div><h3>Player Start</h3><p>Open the <strong>Place Actors</strong> panel (<strong>Window → Place Actors</strong>), search "Player Start", drag it onto your floor. Rotate it to face the way players should look on spawn. Without it the game can't spawn anyone.</p></div></li>
-    <li><div><h3>Build</h3><p>Add geometry (section 4 says what the movement needs from it). When you import meshes or textures, or create materials, do it with your <strong>YourMapName Content</strong> folder selected in the Content Browser so they land inside your mod. <strong>Everything your map uses has to be inside your plugin folder</strong> — the package step stops if it finds assets from the kit's plain <code>Content</code> folder, and lists them. (Every installed map shares that one <code>Content</code> path in the game, so two maps with the same pack in it would overwrite each other's copies.) Fab and Megascans always import into <code>Content</code>, so <strong>you don't move anything by hand</strong>: just package. When the package step finds assets in <code>Content</code>, it offers to move them for you. Close the editor, type <strong>Y</strong>, and it moves every asset your map uses into your plugin, fixes every reference, and packages again. Assets in <code>Content</code> that your map doesn't use are left alone. Fab's shared master materials (<code>Content\Fab\Materials</code>, <code>MaterialFunctions</code>, <code>MaterialParameterCollection</code>, <code>Textures</code>) come with the kit and the game: they stay where they are, and every map uses the game's copy. You can also run the move on its own at any time: close the editor and double-click <code>Tools\MoveIntoPlugin.cmd</code>. It keeps a copy of every file it touches in <code>Saved\MoveIntoPlugin-Backup\</code>.</p></div></li>
-    <li><div><h3>Play</h3><p>Press <strong>Play</strong> (the ▶ button in the toolbar). That is the real game: real movement, HUD, saves, timer, RPG. <kbd>Esc</kbd> opens the pause menu (CONTROLS shows every bind), <kbd>~</kbd> opens the console. Save the level (<kbd>Ctrl</kbd>+<kbd>S</kbd>) as you go.</p></div></li>
-    <li><div><h3>Package it</h3><p>When it plays right, package it (section 7) and it appears in the game's map list.</p></div></li>
+    <li><div><h3>Open the kit</h3><p>Double-click <code>project_jump.uproject</code>. The first open takes a few minutes (shaders). Asked to rebuild modules? Say <strong>No</strong>: you have the wrong engine version.</p></div></li>
+    <li><div><h3>Make your plugin (once)</h3><p><strong>Edit → Plugins → + Add</strong> (top left) → <strong>Content Only</strong>.</p>
+      <ul><li><strong>Plugin Name</strong>: letters and digits only, e.g. <code>YourPluginName</code>. <strong>It's permanent.</strong></li><li><strong>Author</strong>: you. Leave the rest.</li></ul>
+      <p>Click <strong>Create Plugin</strong>. No restart needed.</p></div></li>
+    <li><div><h3>Show it in the Content Browser</h3><p>Content Browser (<strong>Window → Content Browser</strong>) → <strong>Settings</strong> (top right) → tick <strong>Show Plugin Content</strong>. Right-click <strong>YourPluginName Content</strong> in the folder tree → <strong>New Folder</strong> → <code>Maps</code>.</p></div></li>
+    <li><div><h3>Make the level</h3><p><strong>File → New Level → Basic</strong> (floor, light, sky) or <strong>Empty Level</strong>. Then <strong>File → Save Current Level As...</strong> into <strong>YourPluginName Content → Maps</strong>, named <code>YourMapName</code>. Don't reuse a shipped map's name (<code>Aquatic</code>, <code>JumpLevel2</code>, <code>Tutorial</code>, <code>MainMenu</code>).</p></div></li>
+    <li><div><h3>Add a Player Start</h3><p><strong>Window → Place Actors</strong>, search "Player Start", drag it onto your floor and rotate it to face where players should look. No Player Start, no spawn.</p></div></li>
+    <li><div><h3>Build</h3><p>Add geometry, with <strong>box collision on everything players jump on</strong> (section 4). Import and create assets with <strong>YourPluginName Content</strong> selected, so they land in your plugin folder.</p>
+      <p><strong>Fab and Megascans</strong> always import into the kit's <code>Content</code> instead. Leave them there: the package step moves them for you.</p>
+      <details><summary>How the automatic move works</summary>
+        <ul>
+          <li>When the package step finds assets your map uses in <code>Content</code>, it offers to move them. Close the editor and type <strong>Y</strong>: it moves them into your plugin, fixes every reference, and packages again.</li>
+          <li>Assets your map doesn't use are left alone.</li>
+          <li>Fab's shared master materials (<code>Content\Fab\Materials</code>, <code>MaterialFunctions</code>, <code>MaterialParameterCollection</code>, <code>Textures</code>) stay put: the kit and the game both have them.</li>
+          <li>To move without packaging: close the editor, double-click <code>Tools\MoveIntoPlugin.cmd</code>.</li>
+          <li>Every file it touches is backed up to <code>Saved\MoveIntoPlugin-Backup\</code>.</li>
+          <li>Why: in the game every map shares one <code>Content</code> path, so two maps with the same pack there would overwrite each other's copies.</li>
+        </ul>
+      </details></div></li>
+    <li><div><h3>Play</h3><p>Press <strong>Play</strong> (▶). That's the real game: movement, HUD, saves, timer, RPG. <kbd>M</kbd> opens the pause menu (CONTROLS lists the binds), <kbd>~</kbd> the console, and <kbd>Esc</kbd> stops playing and returns to the editor. Save often (<kbd>Ctrl</kbd>+<kbd>S</kbd>).</p></div></li>
+    <li><div><h3>Package it</h3><p>Double-click <code>Tools\PackageMod.cmd</code> (section 7). Your map appears in the game's map list.</p></div></li>
   </ol>
+  <div class="ready">
+    <h3>Before you publish</h3>
+    <ul class="checklist">
+      <li>Player Start (step 3.5)</li>
+      <li>Box or convex collision on everything players jump on (<a href="#movement">4</a>)</li>
+      <li>A Start and a Finish timer zone (<a href="#timer">5</a>)</li>
+      <li>Map card with a thumbnail and a difficulty per route (<a href="#card">5</a>)</li>
+      <li>Packaged and played in the real game (<a href="#package">7</a>)</li>
+      <li><code>workshop.txt</code> filled in, <code>preview.png</code> added (<a href="#share">8</a>)</li>
+    </ul>
+  </div>
 </section>
 
 <section id="movement">
   <h2><span class="n">4</span>Building for the movement</h2>
-  <p>The movement is built on classic jump-map physics and reads the map as brushes. What this means for geometry:</p>
-  <h3>Sizes</h3>
-  <p><strong>1 game unit = 2.54 cm.</strong> Reference numbers, in both:</p>
+  <p class="short"><span class="tag">In short</span>Anything players stand on, jump from or bounce off needs <strong>box or convex-hull collision</strong>.</p>
+  <p>The movement uses classic jump-map physics. At load it turns box and convex collision into movement brushes, where bounces and elevators work as intended and lineups repeat. Anything else falls back to engine collision, which plays worse.</p>
+
+  <h3 id="collision">Collision</h3>
   <div class="tablewrap"><table>
-    <thead><tr><th>Thing</th><th>Game units</th><th>cm</th></tr></thead>
+    <thead><tr><th>Collision on the mesh</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td><span class="yes">✓</span> Box (any rotation: ramps, 45° sections), convex hull</td><td>Brush. Clean; bounces and elevators work.</td></tr>
+      <tr><td><span class="yes">✓</span> Blocking Volume</td><td>Brush (each convex piece). Good for invisible walls and smoothed-out bounces.</td></tr>
+      <tr><td><span class="meh">~</span> Sphere, capsule</td><td>Engine collision for the <em>whole</em> mesh. Fine for props; no elevators.</td></tr>
+      <tr><td><span class="no">✗</span> Per-triangle ("complex as simple"), geometry brushes (BSP)</td><td>Engine collision. Players catch on edges and stick to walls.</td></tr>
+    </tbody>
+  </table></div>
+  <p>A single sphere or capsule puts the whole mesh on engine collision, so keep curved shapes for props nobody jumps on.</p>
+  <p><strong>To see collision</strong>, turn on <strong>Show → Collision</strong> in the viewport. It draws the collision on every mesh.</p>
+  <p><strong>To fix a mesh's collision:</strong></p>
+  <ol>
+    <li>Double-click the mesh in the Content Browser to open it.</li>
+    <li>Click <strong>Collision → Remove Collision</strong>.</li>
+    <li>Click <strong>Collision → Add Box Simplified Collision</strong>, or a convex collision for angled shapes. If the shape isn't a single box (an L-shaped ledge, say), add several boxes to cover it.</li>
+    <li>In the mesh's Details panel, make sure <strong>Collision Complexity</strong> isn't set to <strong>Use Complex Collision As Simple</strong>.</li>
+  </ol>
+  <p><strong>Built it from geometry brushes (BSP)?</strong> Select the brush, click <strong>Brush Settings → Create Static Mesh</strong>, then fix the new mesh as above.</p>
+  <p>Cube-grid and Modeling Mode meshes often get per-triangle collision: players catch on a flat wall mid-air and "surf" along it instead of dropping.</p>
+  <details><summary>Check what the movement made of your map (CmWorld log)</summary>
+    <p>Play, open the Output Log and filter on <code>CmWorld</code>:</p>
+    <ul>
+      <li>each converted mesh or volume with angled faces: its brush count and where it is;</li>
+      <li>each skipped mesh, and why ("complex-as-simple", "sphere/capsule collision", "not convex"). Skipped means engine collision;</li>
+      <li>one line counting the Blocking Volumes.</li>
+    </ul>
+  </details>
+
+  <h3>Sizes</h3>
+  <div class="tablewrap"><table>
+    <thead><tr><th>1 game unit = 2.54 cm</th><th>Game units</th><th>cm</th></tr></thead>
     <tbody>
       <tr><td>Player, standing</td><td class="num">70</td><td class="num">178</td></tr>
       <tr><td>Player, crouched</td><td class="num">50</td><td class="num">127</td></tr>
       <tr><td>Player radius</td><td class="num">15</td><td class="num">38.1</td></tr>
       <tr><td>Standing jump, height reached</td><td class="num">≈39</td><td class="num">≈99</td></tr>
       <tr><td>Sprint jump on flat ground, no strafing</td><td class="num">≈180</td><td class="num">≈450</td></tr>
-      <tr><td>Useful editor grid</td><td class="num">4 or 10</td><td class="num">10.16 or 25.4</td></tr>
     </tbody>
   </table></div>
-  <p>Good strafing adds a lot to the jump distance. Set the custom grid under Editor Preferences → Level Editor → Viewports → Grid Snapping ("Decimal" sizes), or just type sizes in the Details panel.</p>
-  <h3>Collision</h3>
-  <p><strong>Anything the player stands on, jumps from, jumps along or bounces off needs simple collision made of boxes or convex hulls.</strong> Those are read at map load into movement brushes; on brushes, elevators and bounces behave exactly as intended, and lineups are repeatable. Rotated boxes (ramps, 45° sections) and convex hulls are brushes too, with angled faces. What can't become a brush goes through the engine's own collision instead:</p>
-  <div class="tablewrap"><table>
-    <thead><tr><th>Collision on the mesh</th><th>What the movement does</th><th>Feel</th></tr></thead>
-    <tbody>
-      <tr><td>Box, any rotation</td><td>movement brush</td><td>clean, elevators work</td></tr>
-      <tr><td>Convex hull</td><td>movement brush (angled faces)</td><td>clean, elevators work</td></tr>
-      <tr><td>Blocking Volume</td><td>movement brush (each convex piece)</td><td>clean, elevators work</td></tr>
-      <tr><td>Sphere, capsule</td><td>engine collision (whole mesh)</td><td>fine for props, no elevators</td></tr>
-      <tr><td>Per-triangle ("complex as simple")</td><td>engine collision</td><td>can catch and stick on edges</td></tr>
-      <tr><td>Geometry brushes (BSP: Box Brush etc.)</td><td>engine collision</td><td>same as per-triangle</td></tr>
-    </tbody>
-  </table></div>
-  <p>One mesh is all or nothing: if any collision shape on it can't be a brush (a sphere or capsule), the <strong>whole</strong> mesh uses engine collision. Keep curved shapes on props you don't jump on.</p>
-  <p>Check a mesh with <strong>Show → Collision</strong> in the viewport. Cube-grid and other Modeling Mode meshes often end up with per-triangle collision, and a flat wall made that way is many small faces the player catches on mid-air: it "surfs" along instead of dropping. Open the mesh, <strong>Collision → Remove Collision</strong>, then <strong>Collision → Add Box Simplified Collision</strong> (or a convex collision); build anything that isn't one box from several boxes. Geometry brushes: select one, <strong>Brush Settings → Create Static Mesh</strong>, then give the mesh a box. Don't tick "Use Complex Collision As Simple" on anything you jump on.</p>
-  <p>Blocking Volumes count as brushes too, so an invisible wall or a smoothed-out bounce made from one plays exactly like a box.</p>
-  <p>To see what the movement did with your map: Play, open the Output Log and filter on <code>CmWorld</code>. Every converted mesh or volume with angled faces gets a line with its brush count and where it is, every mesh it skipped gets a line saying why (e.g. "complex-as-simple", "sphere/capsule collision", "not convex"), and one line counts the Blocking Volumes. Each skipped mesh is a surface on the engine path.</p>
-  <ul>
-    <li><strong>Bounces</strong> are the point of a jump map: a bounce is a fast diagonal landing on the edge of a box, so build bounce surfaces from clean boxes with edges on the grid.</li>
-    <li><strong>Keep whole-unit sizes</strong> for ledges you intend to be exact: a 2.54 cm grid multiple. The loader snaps to a 1/16-unit grid, so small errors are forgiven, but don't build on random decimals if you want a known jump to be a known jump.</li>
-    <li><strong>Falling</strong> does not kill or respawn anyone, and don't make it: leave <strong>Kill Z</strong> in World Settings at its default (a map that sets it destroys the player with no respawn). Players save and load positions, jump-server style (Save Position = <kbd>V</kbd>, Load Position = <kbd>F</kbd> by default), so design for that: obvious save spots, no soft-locks.</li>
-    <li><strong>Scale test early.</strong> Drop a Player Start on your first platform and play: the pawn is the ruler. Ten minutes of jumping tells you more than any number here.</li>
-  </ul>
-  <h3>Ice (slick surfaces)</h3>
-  <p>Any surface can be ice. On ice the player has no friction and almost no grip: they keep their speed and can't stop or turn sharply. Gravity keeps pulling while they stand on it, so an icy slope slides them downhill and speeds them up. Jumping off ice works as normal.</p>
-  <p>To make something icy, give it the tag <code>Slick</code>:</p>
+
+  <h3>Don't set Kill Z</h3>
+  <p>Leave <strong>Kill Z</strong> in World Settings at its default: a map that sets it removes the player with no respawn. Players save and load positions instead (<kbd>V</kbd> / <kbd>F</kbd>), so give them clear save spots and no soft-locks.</p>
+
+  <h3 id="ice">Ice</h3>
+  <p>Tag a surface <code>Slick</code> to make it ice: no friction, players keep their speed and can't stop or turn sharply, and slopes slide them downhill faster. Jumping works as normal.</p>
   <ol>
-    <li>Click the mesh (or Blocking Volume) in the level.</li>
-    <li>In the <strong>Details</strong> panel, type <code>Tags</code> in the search box at the top.</li>
-    <li>Next to <strong>Tags</strong>, click <strong>+</strong>. (If you see both Tags and Component Tags, either works.)</li>
-    <li>Type <code>Slick</code> in the new box and press <kbd>Enter</kbd>.</li>
-    <li>Press Play and walk onto it: you should slide.</li>
+    <li>Select the mesh (or Blocking Volume) in the level.</li>
+    <li>In <strong>Details</strong>, search <code>Tags</code> and click <strong>+</strong> (Tags or Component Tags, either works).</li>
+    <li>Type <code>Slick</code>, press <kbd>Enter</kbd>. Play and walk on it: you should slide.</li>
   </ol>
-  <p>Tagging a placed Blueprint makes every part of it icy. For one piece only: open the Blueprint, click that mesh in the <strong>Components</strong> list, and add <code>Slick</code> under <strong>Component Tags</strong> instead.</p>
   <ul>
-    <li>The tag only changes the movement. Give the surface an icy-looking material so players can see what they're stepping on.</li>
-    <li>Copies keep the tag: tag one ice block, then duplicate it (<kbd>Ctrl</kbd>+<kbd>D</kbd>, or <kbd>Alt</kbd>+drag).</li>
-    <li>Set it in the editor. The game reads it when the map loads, so a tag a Blueprint adds while playing won't reliably work.</li>
+    <li>The tag only changes the movement: give it an icy material so players can see it.</li>
+    <li>Duplicates (<kbd>Ctrl</kbd>+<kbd>D</kbd>, <kbd>Alt</kbd>+drag) keep the tag.</li>
+    <li>Tagging a placed Blueprint makes all of it icy. For one piece, open the Blueprint, select that mesh in <strong>Components</strong> and add <code>Slick</code> to its <strong>Component Tags</strong>.</li>
+    <li>Tag in the editor. Tags are read when the map loads, so a Blueprint adding one while playing won't reliably work.</li>
   </ul>
+
   <h3>Performance</h3>
-  <p>The movement runs at its own fixed rate, so frame rate does not change the physics, but keep the map cheap anyway: players want high frame rates. <code>stat fps</code> in the console shows what you cost. The game uses Lumen; big open landscapes with foliage are where frames go.</p>
+  <p>Frame rate never changes the physics (it runs at a fixed rate), but players want high FPS. <code>stat fps</code> in the console shows your cost. The game uses Lumen; big landscapes with foliage are where frames go.</p>
 </section>
 
 <section id="timer">
-  <h2><span class="n">5</span>Timer zones</h2>
-  <p>Timed runs and leaderboards come from <strong>TimerZone</strong> actors (Place Actors → search "Timer Zone"):</p>
+  <h2><span class="n">5</span>Timer zones and the map card</h2>
+  <p class="short"><span class="tag">In short</span>One <strong>Start</strong> zone, one <strong>Finish</strong> zone, and a <code>_Info</code> asset for the menu card.</p>
+
+  <h3>Timer zones</h3>
+  <p>Timed runs come from <strong>TimerZone</strong> actors: Place Actors → search "Timer Zone". Set these in Details:</p>
   <ul>
-    <li><span class="zone start"></span>One with <strong>Zone Type = Start</strong> where the run begins (green wireframe). The clock starts when the player <em>leaves</em> this box.</li>
-    <li><span class="zone finish"></span>One with <strong>Zone Type = Finish</strong> at the end (red wireframe). The clock stops when the player <em>enters</em> it.</li>
-    <li><strong>Box Extent</strong> is the box's half-size in cm. Make the start box cover the whole spawn platform so the run can't start early; make the finish generous.</li>
-    <li><strong>Route</strong> (finish zones only): the name this finish awards. One finish, leave it on <code>main</code>. Several finishes = several routes with their own leaderboards: name them <code>easy</code>, <code>hard</code>, <code>rocketless</code>, whatever players will call them. Everyone starts from the same start box.</li>
-    <li>Wireframes are visible in the editor and in the game. <strong>Line Thickness</strong>, the two colours and <strong>Draw Through Walls</strong> only change how they look.</li>
+    <li><span class="zone start"></span><strong>Zone Type = Start</strong> (green). The clock starts when the player <em>leaves</em> it, so cover the whole spawn platform.</li>
+    <li><span class="zone finish"></span><strong>Zone Type = Finish</strong> (red). The clock stops when the player <em>enters</em> it, so make it generous.</li>
+    <li><strong>Box Extent</strong>: half-size, in cm.</li>
+    <li><strong>Route</strong> (Finish only): leave <code>main</code> for one finish. More finishes = more routes, each with its own leaderboard, all from the same Start. Name them what players say: <code>easy</code>, <code>hard</code>, <code>rocketless</code>.</li>
   </ul>
-  <p><strong>Online leaderboards:</strong> each finish route gets its own, for up to 32 routes per map. Route names: letters, numbers, spaces, <code>-</code> and <code>_</code>, up to 32 characters. Extra routes, or names with other characters, still count on the local leaderboard.</p>
-  <p>Every finish counts on the local leaderboard (<code>top</code> in the console lists it). Ignore <strong>TutorialZone</strong>: it drives the game's tutorial and is not for maps.</p>
-  <h3>The map card: picture, gamemode, difficulty</h3>
-  <p>The menu shows every map as a card: a square picture, the name, the gamemode and how hard it is. Give yours one. In the Content Browser, in the same folder as your level, right-click → <strong>Data Asset</strong>, pick <strong>JumperMapInfo</strong>, and name it exactly <code>&lt;LevelName&gt;_Info</code> (level <code>Sky</code> → <code>Sky_Info</code>). Open it and fill in:</p>
-  <ul>
-    <li><strong>Title</strong>: what the card says (empty = the level name). <strong>Author</strong>: you.</li>
-    <li><strong>Gamemode</strong>: CJ. BHOP / SURF / KZ are listed for later.</li>
-    <li><strong>Is Tutorial</strong>: tick it for a teaching map; the card says TUTORIAL instead of a difficulty.</li>
-    <li><strong>Thumbnail</strong>: a square picture. Take a screenshot while playing in the editor (F9), crop it square (1024×1024 is plenty), import the PNG next to the level and pick it here.</li>
-    <li><strong>Routes</strong>: one entry per finish route — the Route names from your timer zones, <code>main</code> for a single route — each with a <strong>Number</strong> from 1 to 10. The tier (EASY 1–3, MEDIUM 4–5, HARD 6–8, INSANE 9–10) comes from the number. The card leads with the first entry and says "+N routes" for the rest.</li>
-  </ul>
-  <p>No <code>_Info</code> asset = the map still lists, with a coloured placeholder and no difficulty.</p>
-  <h3>Rating a route</h3>
-  <p>The rating answers one question: <strong>who can finish this route, and how long does it take them?</strong> Nothing about which tricks it uses. One number per route; the tier comes from it.</p>
+  <p>Ignore <strong>TutorialZone</strong>: it's for the game's tutorial.</p>
+  <details><summary>Leaderboard limits, and how the zones look</summary>
+    <ul>
+      <li>Online leaderboards: one per finish route, up to 32 per map. Route names: letters, numbers, spaces, <code>-</code> and <code>_</code>, up to 32 characters. Extra routes or other characters still count locally.</li>
+      <li>Every finish counts on the local leaderboard (<code>top</code> in the console).</li>
+      <li>Wireframes of the Start/Finish boxes show in the editor and the game. You can customize the look of them by adjusting <strong>Line Thickness</strong>, the colours and <strong>Draw Through Walls</strong>.</li>
+    </ul>
+  </details>
+
+  <h3 id="card">The map card</h3>
+  <p>In-game, the menu shows each map as a card: picture, name, gamemode, difficulty. Without one, yours gets a coloured placeholder and no difficulty or gamemode.</p>
+  <ol>
+    <li>In the Content Browser, open the folder your level is in (<strong>YourPluginName Content → Maps</strong>). Right-click → <strong>Data Asset</strong> → <strong>JumperMapInfo</strong>.</li>
+    <li>Name it exactly your level's name plus <code>_Info</code>: <code>YourMapName_Info</code>. The game only finds it with that name, next to the level.</li>
+    <li>Open it and fill in:</li>
+  </ol>
   <div class="tablewrap"><table>
-    <tr><th>Tier</th><th>Who finishes it</th><th>#</th></tr>
-    <tr><td>EASY</td><td>a brand-new player</td><td>1 in their first hour · 2 in their first session · 3 in their first week</td></tr>
-    <tr><td>MEDIUM</td><td>a regular jumper</td><td>4 in one sitting · 5 over a few sessions</td></tr>
-    <tr><td>HARD</td><td>only experienced jumpers</td><td>6 in one session · 7 over a few sessions · 8 over weeks</td></tr>
-    <tr><td>INSANE</td><td>only the best players</td><td>9 a few people have · 10 one person has, or nobody yet</td></tr>
+    <tbody>
+      <tr><td>Title</td><td>A custom map name. Empty = the level's name, as saved in the editor.</td></tr>
+      <tr><td>Author</td><td>You.</td></tr>
+      <tr><td>Gamemode</td><td>CJ. (BHOP, SURF and KZ are for later.)</td></tr>
+      <tr><td>Is Tutorial</td><td>Shows TUTORIAL instead of a difficulty.</td></tr>
+      <tr><td>Thumbnail</td><td>Square picture: screenshot while playing (<kbd>F9</kbd>), crop square (1024×1024 is plenty), import the PNG next to the level.</td></tr>
+      <tr><td>Routes</td><td>One entry per finish route: its Route name (<code>main</code> if just one) and a <strong>Number</strong> 1–10. The card shows the first and "+N routes".</td></tr>
+    </tbody>
   </table></div>
-  <p>Three rules: rate the route as it's meant to be played (each route gets its own number; a skip or exploit doesn't change it); a rating is a guess until people play it — if nobody finishes your "3", change the number; not sure, ask in #mapping. 0 means "not rated yet".</p>
+
+  <h3>Rating a route</h3>
+  <p>Rate <strong>who can finish it, and how long it takes them</strong>, not which tricks it uses.</p>
+  <div class="tablewrap"><table>
+    <tbody>
+      <tr><td><b class="t easy">EASY 1–3</b></td><td>a brand-new player</td></tr>
+      <tr><td><b class="t medium">MEDIUM 4–5</b></td><td>a regular jumper</td></tr>
+      <tr><td><b class="t hard">HARD 6–8</b></td><td>only experienced jumpers</td></tr>
+      <tr><td><b class="t insane">INSANE 9–10</b></td><td>only the best players</td></tr>
+    </tbody>
+  </table></div>
+  <p>Rate each route as meant to be played; skips don't count. If nobody finishes your "3", change it. Unsure? Ask in #mapping. 0 = not rated yet. <a href="difficulty.html">What each number means</a></p>
 </section>
 
 <section id="bp">
-  <h2><span class="n">6</span>Blueprints: making your map interactive</h2>
-  <p>Blueprints in your plugin run in the game. Use them for moving platforms, doors, buttons, launch pads, teleporters, low-gravity zones, timed sequences, sky and weather, on-screen text. All the normal Unreal nodes work on your own things: your actors, meshes, lights, sounds, effects and widgets.</p>
+  <h2><span class="n">6</span>Blueprints</h2>
+  <p>Blueprints in your plugin run in the game: moving platforms, doors, buttons, launch pads, teleporters, low gravity, timed sequences, sky and weather, on-screen text. Normal nodes work on all your own actors, meshes, lights, sounds, effects and widgets.</p>
+  <div class="rule"><p><strong>The player is the exception.</strong> Normal nodes can read it (position, speed, view) but not change it. Use the <strong>Map Scripting</strong> nodes, and <strong>check Is Local Player first</strong>.</p></div>
 
-  <h3>Moving the player: the Map Scripting nodes</h3>
-  <p>The player is special. Normal nodes can read it (where it is, how fast it's going, where it's looking) but can't change it. To move or change the player, use the <strong>Map Scripting</strong> nodes:</p>
+  <h3>Moving the player</h3>
   <ol>
-    <li>Open your Blueprint's Event Graph.</li>
-    <li>Right-click on empty space and type <strong>Map Scripting</strong>: they're all listed there. (Typing a node's name, like <code>Launch Player</code>, works too.)</li>
-    <li>Plug the player into the <strong>Player</strong> pin. In a trigger, that's the <strong>Other Actor</strong> of the overlap event.</li>
+    <li>In the Event Graph, right-click and type <strong>Map Scripting</strong> to list them (or a node's name, like <code>Launch Player</code>).</li>
+    <li>Plug the player into the <strong>Player</strong> pin. In a trigger, that's the overlap's <strong>Other Actor</strong>.</li>
+    <li>Put a <strong>Branch</strong> on <strong>Is Local Player</strong> in front. In multiplayer every player's game runs your triggers; this makes each player move only themselves.</li>
   </ol>
-  <div class="rule"><p><strong>Always check Is Local Player first</strong>, with a Branch. In multiplayer every player's game runs your triggers for its own player; the check makes each player move only themselves.</p></div>
-  <p>A launch pad:</p>
-<pre><code>On Component Begin Overlap (Box)
+<pre><code><span class="c">// a launch pad</span>
+On Component Begin Overlap (Box)
   -&gt; Branch (Condition: Is Local Player, Actor = Other Actor)
      True -&gt; Launch Player (Player = Other Actor,
                             Launch Velocity = 0, 0, 800,
                             Replace Vertical = ticked)</code></pre>
-  <p>A teleporter: the same, with <strong>Teleport Player With View</strong> (Location and View from a Target Point's Get Actor Location and Get Actor Rotation). A low-gravity zone: Begin Overlap → <strong>Set Player Gravity Scale</strong> 0.5, End Overlap → <strong>Reset Player Movement Scales</strong>.</p>
-  <p>Every run starts at normal: restarting, or walking back into the start box, puts the scales back to 1, and the triggers the player is standing in fire again (End Overlap, then Begin Overlap), so a zone around the start keeps working. Loading a save doesn't change them. The rest of your map isn't reset by a restart: a door that was opened stays open.</p>
+  <ul>
+    <li><strong>Teleporter:</strong> the same with <strong>Teleport Player With View</strong>, using a Target Point's Get Actor Location and Get Actor Rotation.</li>
+    <li><strong>Low gravity:</strong> Begin Overlap → <strong>Set Player Gravity Scale</strong> 0.5; End Overlap → <strong>Reset Player Movement Scales</strong>.</li>
+  </ul>
+  <details><summary>All Map Scripting nodes</summary>
+    <div class="tablewrap"><table>
+      <tbody>
+        <tr><td>Get Local Player</td><td>The player on this computer.</td></tr>
+        <tr><td>Is Player / Is Local Player</td><td>Is this actor a player / the player on this computer.</td></tr>
+        <tr><td>Launch Player</td><td>Pushes the player: adds to their speed, or replaces the up-down and/or sideways part.</td></tr>
+        <tr><td>Set / Add / Get Player Velocity</td><td>Speed and direction, in the speedometer's units.</td></tr>
+        <tr><td>Teleport Player</td><td>Moves the player. Aim a little above the floor; if the target is inside something, the player is nudged clear.</td></tr>
+        <tr><td>Teleport Player With View</td><td>The same, and turns them to face a direction.</td></tr>
+        <tr><td>Set / Get Player View</td><td>Where the player is looking.</td></tr>
+        <tr><td>Get Player Speed, Is Player On Ground / Crouched / Sprinting</td><td>Reads the movement.</td></tr>
+        <tr><td>Set Player Gravity / Speed / Jump Height Scale</td><td>1 = normal, 0.5 = half, 2 = double. Jump height 0 = no jumping. Every map starts at 1.</td></tr>
+        <tr><td>Reset Player Movement Scales</td><td>All three back to 1.</td></tr>
+        <tr><td>Is Run In Progress, Get Run Time, Is Player Practicing</td><td>Reads the run timer and practice mode.</td></tr>
+      </tbody>
+    </table></div>
+  </details>
+  <details><summary>Restarts, saves, and Unreal's own nodes</summary>
+    <ul>
+      <li>Restarting, or walking back into the start box, resets the scales to 1 and re-fires the triggers the player is standing in (End Overlap, then Begin Overlap), so a zone around the start keeps working. Loading a save doesn't change the scales.</li>
+      <li>A restart doesn't reset the rest of your map: an opened door stays open.</li>
+      <li>Unreal's <strong>Set Actor Location</strong>, <strong>Teleport</strong>, <strong>Launch Character</strong> and <strong>Set Control Rotation</strong> also work on the player.</li>
+      <li>Nothing moves a player who is spectating, watching a replay or flying in practice.</li>
+    </ul>
+  </details>
+
+  <h3 id="limits">What maps can't do</h3>
+  <p>The game won't load a map whose Blueprints try to:</p>
+  <ul>
+    <li><strong>reach outside the game</strong>: files, websites, programs, downloads, video files, the microphone;</li>
+    <li><strong>take over the game</strong>: quit, load another level, kick or rename players, pause, slow time, save games;</li>
+    <li><strong>change player settings</strong>: language, controls, graphics, sound, mouse cursor, window;</li>
+    <li><strong>find out who's playing</strong>: names, Steam IDs;</li>
+    <li><strong>change the game</strong>: the player (except via Map Scripting), game mode, HUD, leaderboards, or timer zones while playing. A map can't bring its own player or game mode.</li>
+  </ul>
+  <details><summary>Allowed, but limited</summary>
+    <ul>
+      <li>Normal nodes done to the player (Destroy Actor, Set Actor Hidden In Game, Set Life Span...) are skipped. Camera shakes and fades work.</li>
+      <li><strong>Execute Console Command</strong> only sets visual and sound settings (fog, clouds, sky, shadows, lighting, effects) to a number. Anything else is ignored, and it all resets when your map ends.</li>
+      <li><strong>Load Asset</strong> works for your content and the game's.</li>
+      <li>Blueprints can react to keys, but the game's controls come first. In the game, <kbd>Esc</kbd> always opens the menu.</li>
+      <li>"Run on Server" events do nothing; "Multicast" and "Run on Owning Client" work.</li>
+      <li>MetaSound's <strong>Wave Writer</strong> doesn't work in the game.</li>
+      <li>A map can use its own content and the game's, not another map's.</li>
+    </ul>
+  </details>
+  <p>The package step runs the same check:</p>
   <div class="tablewrap"><table>
-    <thead><tr><th>Node</th><th>What it does</th></tr></thead>
     <tbody>
-      <tr><td>Get Local Player</td><td>The player on this computer.</td></tr>
-      <tr><td>Is Player / Is Local Player</td><td>Is this actor a player / the player on this computer.</td></tr>
-      <tr><td>Launch Player</td><td>Pushes the player: adds to their speed, or replaces the up-down and/or sideways part.</td></tr>
-      <tr><td>Set / Add / Get Player Velocity</td><td>The player's speed and direction, in the speedometer's units.</td></tr>
-      <tr><td>Teleport Player</td><td>Moves the player. Put the target a little above the floor; if it's inside something, the player is nudged clear.</td></tr>
-      <tr><td>Teleport Player With View</td><td>The same, and turns them to face a direction.</td></tr>
-      <tr><td>Set / Get Player View</td><td>Where the player is looking.</td></tr>
-      <tr><td>Get Player Speed, Is Player On Ground / Crouched / Sprinting</td><td>Reads the movement.</td></tr>
-      <tr><td>Set Player Gravity / Speed / Jump Height Scale</td><td>1 = normal, 0.5 = half, 2 = double. Jump height 0 = no jumping. Every map starts at 1.</td></tr>
-      <tr><td>Reset Player Movement Scales</td><td>All three back to 1.</td></tr>
-      <tr><td>Is Run In Progress, Get Run Time, Is Player Practicing</td><td>Reads the run timer and practice mode.</td></tr>
+      <tr><td><code>MODCHECK BLOCKED</code></td><td>Names the Blueprint and the node that isn't allowed. Remove it and package again.</td></tr>
+      <tr><td><code>MODCHECK note</code></td><td>Allowed, but does nothing in the game (usually something done to the player without Map Scripting).</td></tr>
+      <tr><td><code>MODCHECK editor</code></td><td>An editor-only tool. Nothing to do.</td></tr>
     </tbody>
   </table></div>
-  <p>Unreal's own <strong>Set Actor Location</strong>, <strong>Teleport</strong>, <strong>Launch Character</strong> and <strong>Set Control Rotation</strong> also work on the player, so teleporters and launch pads built with those keep working. Nothing moves a player who is spectating, watching a replay or flying in practice.</p>
+  <p>Need a blocked thing for a good reason? Ask in #mapping.</p>
 
-  <h3>What maps can't do</h3>
-  <p>The game checks a map before it loads, and won't load it if a Blueprint tries to:</p>
-  <ul>
-    <li>reach outside the game: files and folders, websites, opening programs, downloading things, playing video files, the microphone;</li>
-    <li>leave or take over the game: quit, load another level, kick or rename players, pause the game, slow down time, save games;</li>
-    <li>change a player's settings: language, controls, graphics or sound settings, the mouse cursor, the window;</li>
-    <li>find out who is playing (names, Steam IDs);</li>
-    <li>change the game itself: the player (except through Map Scripting), the game mode, the HUD, the leaderboards. Set your timer zones up in the editor; they can't be moved or changed while playing. A map can't bring its own player or game mode.</li>
-  </ul>
-  <p>Some things are allowed but limited:</p>
-  <ul>
-    <li><strong>Doing something to the player with normal nodes</strong> (Destroy Actor, Set Actor Hidden In Game, Set Life Span...) is skipped. Camera shakes and camera fades work.</li>
-    <li><strong>Execute Console Command</strong> only changes visual and sound settings (fog, clouds, sky, shadows, lighting, effects), and only to a number. Anything else is ignored, and everything goes back to normal when your map ends.</li>
-    <li><strong>Load Asset</strong> works for your own content and the game's.</li>
-    <li><strong>Keys</strong>: your Blueprints can react to keys, but the game's controls always come first. <kbd>Esc</kbd> always opens the menu.</li>
-    <li><strong>Multiplayer</strong>: "Run on Server" events don't do anything; "Multicast" and "Run on Owning Client" work.</li>
-    <li>MetaSound's <strong>Wave Writer</strong> node doesn't work in the game.</li>
-    <li>A map can use its own content and the game's, not another map's.</li>
-  </ul>
-
-  <h3>When the check stops you</h3>
-  <p>The package step checks your map the same way the game does, and tells you what it found:</p>
-  <ul>
-    <li><code>MODCHECK BLOCKED</code>: the Blueprint and the node that isn't allowed. Remove that node and package again.</li>
-    <li><code>MODCHECK note</code>: allowed, but that part won't do anything in the game (usually something done to the player without a Map Scripting node).</li>
-    <li><code>MODCHECK editor</code>: an editor-only tool (see below). Nothing to do.</li>
-  </ul>
-  <p>If a pack you rely on needs something for a good reason, ask in #mapping: changing a rule comes with a game update, not a new kit.</p>
-
-  <h3>Asset packs (Ultra Dynamic Sky and the like)</h3>
-  <p>Fab packs work: import the pack and package as usual. <code>PackageMod.cmd</code> moves what your map uses into your plugin for you (section 3, Build). The sky, weather, clouds, sounds and effects are packaged with your map. The pack's editor tools (setup windows, readme, toolbar buttons) stay in the kit — Unreal never packages those for any game — and the check lists them as "editor tool". Packs with C++ code can't be used.</p>
+  <h3>Asset packs (Ultra Dynamic Sky etc.)</h3>
+  <p>Fab packs work: import and package as usual. The sky, weather, clouds, sounds and effects go with your map; the pack's editor tools (setup windows, readme, toolbar buttons) stay in the kit and show as editor tools in the check. Packs with C++ code can't be used.</p>
 </section>
 
 <section id="package">
   <h2><span class="n">7</span>Package it</h2>
-  <p>Double-click <code>Tools\PackageMod.cmd</code> and type your plugin's name when it asks (the folder under <code>Plugins</code>, e.g. <code>YourMapName</code>). That's all.</p>
-  <p>It checks your Blueprints (section 6), offers to move anything your map uses out of the kit's <code>Content</code> folder (section 3), packages your map into <code>Saved\Mods\YourMapName\</code> and installs it into the game. Launch the game from Steam: your map is in <strong>PLAY</strong>, with a CUSTOM tag on its card.</p>
-  <p>The first time takes a while (shaders). Later runs are quick. Package again after every change you want to test in the real game; the editor's Play button is for everything before that.</p>
-  <h3>A second map, later</h3>
-  <p><code>PackageMod.cmd</code> packages one mod folder — the plugin you name. The kit can hold as many as you like side by side, so a new map is a new plugin: <code>Plugins\SecondMap</code>, build the level there, package it (type <code>SecondMap</code> when it asks), publish. It gets its own Workshop item, page, picture and rating; the first map is untouched. (Adding a second level inside the same plugin also works — one item then carries both maps, which suits a map pack, not two unrelated maps.) Never rename a plugin: the name is how the game and the Workshop know your mod.</p>
+  <p class="short"><span class="tag">In short</span>Double-click <code>Tools\PackageMod.cmd</code> and type your plugin's name (<code>YourPluginName</code>). That's all.</p>
+  <p>It checks your Blueprints (section 6), offers to move assets out of the kit's <code>Content</code> (step 3.6), packages into <code>Saved\Mods\YourPluginName\</code> and installs into the game. Launch the game from Steam: your map is in <strong>PLAY</strong> with a CUSTOM tag.</p>
+  <ul>
+    <li>The first run is slow (shaders); later ones are quick.</li>
+    <li>Use the editor's Play while building. Package to test a change in the real game.</li>
+    <li><strong>Packaged maps don't load in the editor.</strong> It can't mount packages, so it lists neither your packaged map nor any Workshop map.</li>
+  </ul>
+  <h3>A second map</h3>
+  <p>Make a new plugin (<code>Plugins\SecondMap</code>, step 3.2), build there, and package it as <code>SecondMap</code>. It gets its own Workshop item, page, picture and rating. Two levels in one plugin share one Workshop item: fine for a map pack, not for unrelated maps.</p>
 </section>
 
 <section id="share">
-  <h2><span class="n">8</span>Share it on the Steam Workshop</h2>
-  <h3>Write the Workshop page</h3>
-  <p>The first time you package, the script creates a <code>Workshop</code> folder in your plugin:</p>
-<pre><code>Plugins\YourMapName\Workshop\
+  <h2><span class="n">8</span>Steam Workshop</h2>
+  <p class="short"><span class="tag">In short</span>Fill in <code>workshop.txt</code>, package again, publish from the game's <strong>WORKSHOP → UPLOAD</strong> tab.</p>
+
+  <h3>1. Write the page</h3>
+  <p>Your first package creates a <code>Workshop</code> folder:</p>
+<pre><code>Plugins\YourPluginName\Workshop\
   workshop.txt     <span class="c">the page: title, tags, visibility, description</span>
-  preview.png      <span class="c">the thumbnail in the Workshop list (you add it; under 1 MB, 16:9 looks best)</span>
+  preview.png      <span class="c">Workshop list thumbnail (you add it; under 1 MB, 16:9 looks best)</span>
   Screenshots\     <span class="c">the gallery (you add them; .png or .jpg)</span></code></pre>
-  <p>Open <code>workshop.txt</code> in any text editor and fill it in:</p>
-<pre><code>title: Sky Bounce
+<pre><code><span class="c">// workshop.txt</span>
+title: Sky Bounce
 tags: bounce, hard
 visibility: public
 description:
 Twelve bounces over a canyon. Two routes: the main one, and a rocketless
 one for people who hate themselves.</code></pre>
   <ul>
-    <li><strong>visibility</strong>: <code>public</code>, <code>friends</code>, <code>unlisted</code> (only people with the link) or <code>private</code> (only you). Use <code>private</code> for a first test.</li>
-    <li><strong>description</strong>: everything after that line, as many lines as you like. Steam's formatting works: <code>[b]bold[/b]</code>, <code>[i]italic[/i]</code>, <code>[url=https://...]a link[/url]</code>, <code>[list][*]...[/list]</code>.</li>
+    <li><strong>visibility</strong>: <code>public</code>, <code>friends</code>, <code>unlisted</code> (link only) or <code>private</code> (only you). Use <code>private</code> for a first test.</li>
+    <li><strong>description</strong>: everything after that line. Steam formatting works: <code>[b]bold[/b]</code>, <code>[i]italic[/i]</code>, <code>[url=https://...]a link[/url]</code>, <code>[list][*]...[/list]</code>.</li>
   </ul>
-  <p>Then package again, so the game sees it.</p>
-  <h3>Publish</h3>
+  <p><strong>Then package again</strong> so the game sees it.</p>
+
+  <h3>2. Publish</h3>
   <ol>
-    <li>Launch the game from Steam.</li>
-    <li>Main menu → <strong>WORKSHOP</strong> → the <strong>UPLOAD</strong> tab. Your packaged maps are listed on the left. Pick yours: the right side shows exactly what the page will say, and anything that stops it from publishing.</li>
-    <li>Press <strong>PUBLISH TO WORKSHOP</strong>. The status line shows the upload. When it's done, <strong>OPEN WORKSHOP PAGE</strong> shows the item in the Steam overlay. If Steam asks you to accept the Workshop agreement, do it there, or the item stays hidden.</li>
+    <li>Launch the game from Steam → <strong>WORKSHOP</strong> → <strong>UPLOAD</strong>.</li>
+    <li>Pick your map on the left. The right side previews the page and lists anything blocking it.</li>
+    <li>Press <strong>PUBLISH TO WORKSHOP</strong>. When it's done, <strong>OPEN WORKSHOP PAGE</strong>. If Steam asks you to accept the Workshop agreement, do it, or the item stays hidden.</li>
   </ol>
-  <h3>Update</h3>
-  <p>Change the map, package again, open <strong>WORKSHOP → UPLOAD</strong>, pick the map, write what changed in the box (it appears in the item's change notes), and press <strong>PUBLISH UPDATE</strong>.</p>
+
+  <h3>Updating</h3>
+  <p>Change the map, package, <strong>WORKSHOP → UPLOAD</strong>, pick it, write what changed (it becomes the change notes), <strong>PUBLISH UPDATE</strong>.</p>
   <ul>
-    <li>An update sends the map and your note. Tick <strong>Also update the title, description...</strong> to resend the page details from <code>workshop.txt</code> too; leave it off if you've been editing the page on Steam instead.</li>
-    <li><strong>Reset the leaderboards</strong> is your call on each update. Tick it when the update changes the course: new or moved jumps, bounces, a shortcut opened or closed. Everyone's times on the map start over, and old runs are no longer shown. Leave it off for lighting, looks or decoration: the times carry over. It can't be undone.</li>
-    <li>Screenshots go up with the first publish only. After that, add or remove them on the item's Workshop page.</li>
-    <li>The link between your map and its item is the <code>workshop.json</code> file in your mod folder. The package script keeps it across re-packages; don't delete it, or the next publish makes a second item.</li>
+    <li><strong>Reset the leaderboards</strong>: tick it when the course changes (jumps, bounces, shortcuts). Everyone's times start over and old runs are hidden. Leave it off for looks and lighting. <strong>Can't be undone.</strong></li>
+    <li><strong>Also update the title, description...</strong> resends <code>workshop.txt</code>. Leave it off if you edit the page on Steam.</li>
+    <li>Screenshots only upload on the first publish; after that, manage them on Steam.</li>
+    <li><strong>Don't delete <code>workshop.json</code></strong> in your plugin folder: it links the map to its item. Without it, the next publish makes a second item.</li>
   </ul>
+
   <h3>Playing Workshop maps</h3>
-  <p>Press Subscribe on a map's Workshop page — <strong>WORKSHOP → DOWNLOAD → BROWSE THE WORKSHOP</strong> opens it in the Steam overlay. The map downloads through Steam and appears in <strong>PLAY</strong> within a few seconds, with a WORKSHOP tag on its card. The DOWNLOAD tab lists what you're subscribed to, with its download state, and lets you unsubscribe.</p>
-  <p><strong>Packaged maps only load in the packaged game.</strong> A Workshop map (or one you packaged) is a package; the kit's editor plays from loose files and can't mount packages, so it lists none of them. Test packaged maps in the game itself.</p>
+  <p>Subscribe on the map's Workshop page (<strong>WORKSHOP → DOWNLOAD → BROWSE THE WORKSHOP</strong>). It appears in <strong>PLAY</strong> within seconds, tagged WORKSHOP. The DOWNLOAD tab lists your subscriptions, their download state, and lets you unsubscribe.</p>
+
   <h3>Without the Workshop</h3>
-  <p>Zip your mod folder (<code>Saved\Mods\YourMapName\</code> in the kit) and send it. Anyone who drops the folder into <code>%LOCALAPPDATA%\project_jump\Mods\</code> sees the map.</p>
+  <p>Zip <code>Saved\Mods\YourPluginName\</code> from the kit and send it. It goes in <code>%LOCALAPPDATA%\project_jump\Mods\</code>.</p>
 </section>
 
 <section id="mp">
   <h2><span class="n">9</span>Multiplayer</h2>
-  <p>Host a custom map like any other (pick it when hosting, or call a map vote). Players who don't have it:</p>
   <ul>
-    <li><strong>Workshop maps download automatically.</strong> The lobby list marks the lobby [WORKSHOP]; clicking it downloads the map, then joins. The status line shows the progress. The map stays subscribed for them afterwards.</li>
-    <li><strong>A map vote for a Workshop map</strong> starts the download for everyone who lacks it the moment the vote starts, so the map is there if the vote passes.</li>
-    <li><strong>Maps that aren't on the Workshop</strong> can't be downloaded. The lobby list says "you don't have it" and joining explains why; send those players the zip.</li>
+    <li><strong>Host</strong> a custom map like any other, or call a map vote for it.</li>
+    <li><strong>Workshop maps download automatically</strong> for players who lack them: when they click a [WORKSHOP] lobby (then they join), or as soon as a map vote starts. They stay subscribed afterwards.</li>
+    <li><strong>Non-Workshop maps can't be downloaded.</strong> The lobby says "you don't have it"; send those players the zip.</li>
+    <li><strong>Each player's game runs your Blueprints on its own.</strong> Doors and moving platforms aren't in sync between players, and a launch pad only launches whoever stepped on it.</li>
+    <li><strong>Multiplayer is off in the kit</strong> (its console could bring cheat settings into a lobby). Use the Steam game. Runs finished in the kit go to a separate local board (<code>Leaderboard.kit.json</code>) and never count.</li>
   </ul>
-  <p><strong>Your Blueprints in multiplayer:</strong> every player's game runs your map on its own. A door one player opens stays shut for the others, and moving platforms aren't in step between players. Other players never set off your triggers on your screen, so a launch pad only launches whoever stepped on it.</p>
-  <p><strong>From the kit itself, multiplayer is off</strong> — the kit's editor has the console, so it could bring cheat settings into a lobby. Play multiplayer from the Steam version of the game. For the same reason, runs you finish inside the kit go to a separate local board (<code>Leaderboard.kit.json</code>) and never count.</p>
 </section>
 
 <section id="updates">
   <h2><span class="n">10</span>When the game updates</h2>
-  <p>A game update that changes shipped content comes with a new kit (a new <code>Releases\&lt;version&gt;</code> folder inside it). Re-run <code>PackageMod.cmd</code> from the new kit to re-cook your map; the map itself does not change. Packages cooked against an old release may reference things the new game no longer has.</p>
+  <p>Updates that change shipped content come with a new kit (a new <code>Releases\&lt;version&gt;</code> folder). Run <code>PackageMod.cmd</code> again from it; your map itself doesn't change. Maps packaged for an old release may reference things the new game no longer has.</p>
 </section>
 
 <section id="trouble">
   <h2><span class="n">11</span>Troubleshooting</h2>
+
+  <h3>Opening the kit</h3>
   <dl class="trouble">
-    <div><dt>The editor asks to rebuild modules / "missing modules"</dt><dd>Wrong engine version. The kit needs 5.8.x.</dd></div>
-    <div><dt>My plugin folder isn't in the Content Browser</dt><dd>Settings → Show Plugin Content.</dd></div>
-    <div><dt>Map not listed in the game</dt><dd>Check <code>%LOCALAPPDATA%\project_jump\Saved\Logs\project_jump.log</code> for lines starting <code>LogJumperMods</code>. "no .pak files" means the cook did not produce output; "no maps.json" means the mod folder is incomplete: re-run <code>PackageMod.cmd</code>.</dd></div>
-    <div><dt>"MOD BLOCKED" in the game, or the package step fails with MODCHECK lines</dt><dd>A Blueprint uses something maps can't use; the line names it. Remove that node (section 6).</dd></div>
-    <div><dt>My launch pad or teleporter does nothing in the game</dt><dd>Use the Map Scripting nodes (or Set Actor Location / Launch Character) and check Is Local Player first. Other nodes done to the player are skipped; the package step lists them as <code>MODCHECK note</code>.</dd></div>
-    <div><dt>The package step stops with "uses N asset(s) from the kit's Content folder"</dt><dd>Close the editor and answer <strong>Y</strong> when it offers to move them (or double-click <code>Tools\MoveIntoPlugin.cmd</code>). See step 3.</dd></div>
-    <div><dt>"Close the Unreal editor first"</dt><dd>The move edits your files, so the editor can't have the kit open while it runs. Save, close the editor, run it again.</dd></div>
-    <div><dt>Something looks wrong after a move</dt><dd>Every file it changed is in <code>Saved\MoveIntoPlugin-Backup\&lt;map&gt;-&lt;date&gt;\</code> with its original folder layout. Close the editor and copy them back over <code>Plugins\</code> and <code>Content\</code>.</dd></div>
-    <div><dt>The player falls through my floor</dt><dd>The mesh has no simple collision, or the collision is per-triangle ("Use Complex as Simple"). Add a box collision.</dd></div>
-    <div><dt>The player sticks to a flat wall and slides along it</dt><dd>The wall isn't a brush to the movement (per-triangle cube-grid mesh, geometry brush). See the collision table in section 3; the <code>CmWorld</code> log lines name the culprits.</dd></div>
-    <div><dt>Elevators/bounces feel wrong on one platform</dt><dd>Its collision isn't a brush (per-triangle, or a sphere/capsule somewhere on the mesh). Check its <code>CmWorld</code> line.</dd></div>
-    <div><dt>The WORKSHOP page says Steam refused</dt><dd>The game must be running through Steam, logged in to the account that owns it. If it names an agreement, accept the Workshop agreement on the item's page.</dd></div>
-    <div><dt>My map isn't on the WORKSHOP page, or says NEEDS ATTENTION</dt><dd>Package your map again, then press REFRESH. The page lists what's missing (usually the description in <code>workshop.txt</code>).</dd></div>
-    <div><dt>A subscribed map doesn't show up</dt><dd>Steam may still be downloading it; give it a minute, or restart the game. If it still doesn't appear, the map was published for an older game version: ask the mapper to re-package from the current kit and publish again.</dd></div>
-    <div><dt>"Expected exactly one .uplugin"</dt><dd>The mod folder must contain only your plugin's descriptor.</dd></div>
+    <div><dt>Asks to rebuild modules / "missing modules"</dt><dd>Wrong engine version. The kit needs 5.8.x.</dd></div>
+    <div><dt>My plugin folder isn't in the Content Browser</dt><dd>Settings → Show Plugin Content (step 3.3).</dd></div>
+  </dl>
+
+  <h3>Playing in the editor</h3>
+  <dl class="trouble">
+    <div><dt>The player falls through my floor</dt><dd>No simple collision, or it's per-triangle ("Use Complex as Simple"). Add a box (<a href="#collision">section 4</a>).</dd></div>
+    <div><dt>The player sticks to a flat wall and slides along it</dt><dd>The wall isn't a brush (per-triangle cube-grid mesh, or a geometry brush). See the <a href="#collision">collision table</a>; the <code>CmWorld</code> log names the culprits.</dd></div>
+    <div><dt>Elevators or bounces feel wrong on one platform</dt><dd>Its collision isn't a brush (per-triangle, or a sphere/capsule somewhere on the mesh). Check its <code>CmWorld</code> line.</dd></div>
+    <div><dt>My packaged map or a Workshop map isn't in the editor</dt><dd>Expected: packaged maps only load in the game (<a href="#package">section 7</a>).</dd></div>
+  </dl>
+
+  <h3>Packaging</h3>
+  <dl class="trouble">
+    <div><dt>"uses N asset(s) from the kit's Content folder"</dt><dd>Close the editor and type <strong>Y</strong> when it offers to move them, or run <code>Tools\MoveIntoPlugin.cmd</code> (step 3.6).</dd></div>
+    <div><dt>"Close the Unreal editor first"</dt><dd>The move edits your files. Save, close the editor, run it again.</dd></div>
+    <div><dt>Something looks wrong after a move</dt><dd>Originals are in <code>Saved\MoveIntoPlugin-Backup\&lt;map&gt;-&lt;date&gt;\</code>, in their folder layout. Close the editor and copy them back over <code>Plugins\</code> and <code>Content\</code>.</dd></div>
+    <div><dt><code>MODCHECK</code> lines, or "MOD BLOCKED" in the game</dt><dd>A Blueprint uses something maps can't; the line names it. Remove that node (<a href="#limits">section 6</a>).</dd></div>
+    <div><dt>"Expected exactly one .uplugin"</dt><dd>Your plugin folder must contain exactly one <code>.uplugin</code> file: your plugin's own.</dd></div>
     <div><dt>The package script can't find the engine</dt><dd>Pass it explicitly: <code>-Engine "C:\Program Files\Epic Games\UE_5.8"</code>.</dd></div>
+  </dl>
+
+  <h3>In the game</h3>
+  <dl class="trouble">
+    <div><dt>My map isn't listed</dt><dd>Look in <code>%LOCALAPPDATA%\project_jump\Saved\Logs\project_jump.log</code> for <code>LogJumperMods</code> lines. "no .pak files": the cook produced nothing. "no maps.json": the installed map is incomplete. Either way, run <code>PackageMod.cmd</code> again.</dd></div>
+    <div><dt>My launch pad or teleporter does nothing</dt><dd>Use Map Scripting nodes (or Set Actor Location / Launch Character) behind an Is Local Player check. Other nodes done to the player are skipped and show as <code>MODCHECK note</code>.</dd></div>
+  </dl>
+
+  <h3>Steam Workshop</h3>
+  <dl class="trouble">
+    <div><dt>"Steam refused"</dt><dd>Run the game through Steam, logged in to the account that owns it. If it names an agreement, accept it on the item's page.</dd></div>
+    <div><dt>My map isn't on the WORKSHOP page, or says NEEDS ATTENTION</dt><dd>Package again, then press REFRESH. The page lists what's missing (usually the description in <code>workshop.txt</code>).</dd></div>
+    <div><dt>A subscribed map doesn't show up</dt><dd>Steam may still be downloading: wait a minute or restart the game. Still missing? It was published for an older game version; the mapper needs to re-package from the current kit and publish again.</dd></div>
   </dl>
 </section>
 </main>
