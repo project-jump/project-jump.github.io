@@ -161,6 +161,19 @@ dl.trouble dd { margin: 0; color: var(--ink-2); }
 .rules li::marker { color: var(--accent-ink); font-weight: 600; }
 .how { background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px 16px; }
 
+/* ---- patch notes ---- */
+.release { margin-top: 28px; padding-bottom: 12px; }
+.release + .release { border-top: 1px solid var(--line); padding-top: 28px; }
+.release-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; }
+.release-head h2 { margin: 0; font-size: 30px; }
+.badge { font-family: "Chakra Petch", sans-serif; font-weight: 700; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #0c0e12; background: var(--accent); padding: 3px 8px; border-radius: 4px; }
+.release .note { color: var(--ink-2); margin: 8px 0 16px; }
+.cats { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 6px; }
+.cats a { font-family: "Chakra Petch", sans-serif; font-weight: 600; font-size: 12px; letter-spacing: .1em; text-transform: uppercase; text-decoration: none; color: var(--ink); background: var(--chip); padding: 4px 10px; border-radius: 999px; }
+.cats a:hover { color: #0c0e12; background: var(--accent); }
+.release h3 { font-size: 14px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent-ink); border-top: 1px solid var(--line); padding-top: 16px; margin: 22px 0 8px; }
+.release li { margin-bottom: 5px; }
+
 footer.site-foot { max-width: 1120px; margin: 40px auto 0; padding-top: 16px; border-top: 1px solid var(--line); font-family: "Chakra Petch", sans-serif; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-2); display: flex; flex-wrap: wrap; align-items: center; gap: 8px 24px; }
 footer.site-foot nav { display: flex; flex-wrap: wrap; gap: 4px 18px; margin-left: auto; }
 footer.site-foot a { color: var(--ink-2); text-decoration: none; }
@@ -184,5 +197,11 @@ footer.site-foot a:hover, footer.site-foot a[aria-current="page"] { color: var(-
   section.must { padding: 16px 16px 6px; }
   nav.toc .n { width: auto; margin-right: .3em; }
   .site .mark small { display: none; }
+  /* the page links get their own row under the mark, and scroll sideways if they don't fit */
+  .site .in { flex-wrap: wrap; height: auto; padding-top: 12px; row-gap: 4px; }
+  .site nav { flex-basis: 100%; margin-left: -8px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+  .site nav a { flex: none; white-space: nowrap; font-size: 11px; letter-spacing: .08em; padding: 6px 8px; }
+  .site nav .long { display: none; }
+  html { scroll-padding-top: 96px; }
 }
 @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }

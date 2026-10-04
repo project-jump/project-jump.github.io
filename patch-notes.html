@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patch Notes</title>
+<meta name="description" content="What changed in each PROJECT_JUMP update.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body class="single">
+<div class="site"><div class="in">
+  <a class="mark" href="index.html">PROJECT_JUMP<small>MAPPING</small></a>
+  <nav aria-label="Pages"><a href="index.html">Mapping guide</a><a href="difficulty.html">Difficulty<span class="long"> ratings</span></a><a href="patch-notes.html" aria-current="page">Patch notes</a></nav>
+</div></div>
+<main>
+<header>
+  <div class="eyebrow">PROJECT_JUMP · updates</div>
+  <h1>Patch Notes</h1>
+  <p class="lede">What changed in each update, newest first.</p>
+</header>
+
+<!-- New releases go above this one: copy the article, change the version and the ids. -->
+<article class="release" id="v0.3.0">
+  <div class="release-head"><h2>Version 0.3.0</h2><span class="badge">Latest</span></div>
+  <p class="note">Version 0.3.0 is live. Please restart Steam if you don't see the update.</p>
+  <nav class="cats" aria-label="0.3.0 sections">
+    <a href="#v0.3.0-movement">Movement</a><a href="#v0.3.0-rpg">RPG</a><a href="#v0.3.0-runs">Runs</a><a href="#v0.3.0-leaderboards">Leaderboards &amp; replays</a><a href="#v0.3.0-spectating">Spectating</a><a href="#v0.3.0-hud">HUD &amp; menus</a><a href="#v0.3.0-multiplayer">Multiplayer</a><a href="#v0.3.0-maps">Custom maps</a><a href="#v0.3.0-other">Other</a>
+  </nav>
+
+  <h3 id="v0.3.0-movement">Movement</h3>
+  <ul>
+    <li>Movement and collision went through a full review against the original game; lots of small fixes so it plays closer to it</li>
+    <li>Sprint has no time limit, lasts through the air, and ends on fire, jump, crouch, aiming or a second sprint press</li>
+    <li>Holding sprint through a jump brings sprint back mid-air (space and mouse-wheel jumps differ here, like the original)</li>
+    <li>Crouch can be held or toggled; if you can't stand up you stay crouched; the jump key stands you up from a crouch</li>
+    <li>Aiming slows walking like the original</li>
+    <li>Mouse-wheel jumps and other very short taps always register now</li>
+    <li>Landing and bounce detection is closer to the original, including how much speed a long fall costs</li>
+    <li>Sloped surfaces no longer hold you further away than they should</li>
+    <li>Invisible walls and ramps made with blocking volumes now collide exactly like normal level geometry</li>
+    <li>New ice surfaces in maps: no friction, and slopes slide you downhill</li>
+  </ul>
+
+  <h3 id="v0.3.0-rpg">RPG</h3>
+  <ul>
+    <li>Pressing fire while sprinting now just ends the sprint; keep holding fire and it shoots once the launcher is up</li>
+    <li>New RPG switch option: the launcher is put away the moment it fires, for a clear view after a bounce</li>
+    <li>New RPG zoom option (off by default) with adjustable strength</li>
+    <li>A weapon put away mid-reload keeps reloading (this also closes the put-away reload skip)</li>
+    <li>RPG settings are now together under one RPG heading in Controls</li>
+  </ul>
+
+  <h3 id="v0.3.0-runs">Runs</h3>
+  <ul>
+    <li>Practice is fully separate from your run: rockets fired and moves made in practice no longer count toward it</li>
+    <li>Walking back into the start box without a save now resets the run, with a notice</li>
+    <li>Watching a replay mid-run pauses your run clock and no longer messes up your own run's recording</li>
+    <li>Watching a replay no longer gives you a free reload</li>
+    <li>Stepping back to an older save (hold LOAD + FIRE) now makes that save your current one</li>
+    <li>Fixed stepping back onto a start-box save resetting your load count</li>
+  </ul>
+
+  <h3 id="v0.3.0-leaderboards">Leaderboards &amp; replays</h3>
+  <ul>
+    <li>New leaderboard look: your run, your best with the PB difference, and your rank at the top, plus WATCH buttons</li>
+    <li>Routes are now chips you can click instead of arrows</li>
+    <li>LOW-RPG runs with the same rocket count in the same second are now decided by the milliseconds</li>
+    <li>Maps can have up to 32 routes with online leaderboards</li>
+    <li>Replays now pause on the last frame so you can scrub back or watch again</li>
+    <li>New replay viewer: timeline with saves, loads and rockets marked</li>
+  </ul>
+
+  <h3 id="v0.3.0-spectating">Spectating</h3>
+  <ul>
+    <li>Pick who to watch from the scoreboard: hold Tab, right-click, then click a player (click yourself to go back)</li>
+    <li>See the watched player's keys light up, plus their PMOVE rate and speed</li>
+    <li>Free camera hides the HUD; the mouse wheel sets the fly speed</li>
+    <li>New card showing who is watching you, and who else is watching the same player</li>
+    <li>Your own launcher no longer shows while spectating</li>
+    <li>If the player you're following leaves, the camera moves to the next player instead of snapping back to you</li>
+  </ul>
+
+  <h3 id="v0.3.0-hud">HUD &amp; menus</h3>
+  <ul>
+    <li>New HUD look to match the menus: notices with icons, vote card with countdown and YES/NO keys, new chat, restart prompt, name tags and FPS wheel</li>
+    <li>New default HUD layout (only applies if you never moved your HUD)</li>
+    <li>HUD editor shows every element's outline, name and size</li>
+    <li>Difficulty filter (ALL, 1-10) on SELECT MAP and when hosting</li>
+    <li>Type your own PMOVE rate (snaps to the closest rate the game can run)</li>
+    <li>Workshop lists maps by their in-game name</li>
+  </ul>
+
+  <h3 id="v0.3.0-multiplayer">Multiplayer</h3>
+  <ul>
+    <li>A player losing connection no longer closes the host's lobby</li>
+    <li>Accepting an invite while already in a game now works</li>
+    <li>Chat spam limit to protect slower connections</li>
+  </ul>
+
+  <h3 id="v0.3.0-maps">Custom maps</h3>
+  <ul>
+    <li>Custom maps are checked more thoroughly before they load: a map can't touch your files, settings, the internet or the leaderboards</li>
+    <li>Map makers get new Blueprint nodes for launch pads, teleporters and low-gravity zones, plus more freedom for interactive maps</li>
+    <li>Replays downloaded from the leaderboards are checked before they load</li>
+  </ul>
+
+  <h3 id="v0.3.0-other">Other</h3>
+  <ul>
+    <li>Developer console commands are no longer available to players</li>
+    <li>Fixed a hand-edited config breaking HUD scale or position</li>
+    <li>Unknown keys in the config no longer wipe a bind</li>
+    <li>Removed a leftover "Hello World" message on map start</li>
+  </ul>
+</article>
+</main>
+<footer class="site-foot"><span>project_jump · mapping docs</span><nav aria-label="Legal"><a href="terms.html">Terms of Service</a><a href="privacy.html">Privacy Policy</a></nav></footer>
+</body>
+</html>
