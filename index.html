@@ -146,12 +146,13 @@
   <h2><span class="n">5</span>Timer zones</h2>
   <p>Timed runs and leaderboards come from <strong>TimerZone</strong> actors (Place Actors → search "Timer Zone"):</p>
   <ul>
-    <li><span class="zone start"></span>One with <strong>Type = Start</strong> where the run begins (green wireframe). The clock starts when the player <em>leaves</em> this box.</li>
-    <li><span class="zone finish"></span>One with <strong>Type = Finish</strong> at the end (red wireframe). The clock stops when the player <em>enters</em> it.</li>
-    <li><strong>Half Extent</strong> is the box's half-size in cm. Make the start box cover the whole spawn platform so the run can't start early; make the finish generous.</li>
+    <li><span class="zone start"></span>One with <strong>Zone Type = Start</strong> where the run begins (green wireframe). The clock starts when the player <em>leaves</em> this box.</li>
+    <li><span class="zone finish"></span>One with <strong>Zone Type = Finish</strong> at the end (red wireframe). The clock stops when the player <em>enters</em> it.</li>
+    <li><strong>Box Extent</strong> is the box's half-size in cm. Make the start box cover the whole spawn platform so the run can't start early; make the finish generous.</li>
     <li><strong>Route</strong> (finish zones only): the name this finish awards. One finish, leave it on <code>main</code>. Several finishes = several routes with their own leaderboards: name them <code>easy</code>, <code>hard</code>, <code>rocketless</code>, whatever players will call them. Everyone starts from the same start box.</li>
-    <li>Wireframes are visible in the editor and in the game.</li>
+    <li>Wireframes are visible in the editor and in the game. <strong>Line Thickness</strong>, the two colours and <strong>Draw Through Walls</strong> only change how they look.</li>
   </ul>
+  <p><strong>Online leaderboards:</strong> each finish route gets its own, for up to 32 routes per map. Route names: letters, numbers, spaces, <code>-</code> and <code>_</code>, up to 32 characters. Extra routes, or names with other characters, still count on the local leaderboard.</p>
   <p>Every finish counts on the local leaderboard (<code>top</code> in the console lists it). Ignore <strong>TutorialZone</strong>: it drives the game's tutorial and is not for maps.</p>
   <h3>The map card: picture, gamemode, difficulty</h3>
   <p>The menu shows every map as a card: a square picture, the name, the gamemode and how hard it is. Give yours one. In the Content Browser, in the same folder as your level, right-click → <strong>Data Asset</strong>, pick <strong>JumperMapInfo</strong>, and name it exactly <code>&lt;LevelName&gt;_Info</code> (level <code>Sky</code> → <code>Sky_Info</code>). Open it and fill in:</p>
@@ -194,6 +195,7 @@
                             Launch Velocity = 0, 0, 800,
                             Replace Vertical = ticked)</code></pre>
   <p>A teleporter: the same, with <strong>Teleport Player With View</strong> (Location and View from a Target Point's Get Actor Location and Get Actor Rotation). A low-gravity zone: Begin Overlap → <strong>Set Player Gravity Scale</strong> 0.5, End Overlap → <strong>Reset Player Movement Scales</strong>.</p>
+  <p>Every run starts at normal: restarting, or walking back into the start box, puts the scales back to 1, and the triggers the player is standing in fire again (End Overlap, then Begin Overlap), so a zone around the start keeps working. Loading a save doesn't change them. The rest of your map isn't reset by a restart: a door that was opened stays open.</p>
   <div class="tablewrap"><table>
     <thead><tr><th>Node</th><th>What it does</th></tr></thead>
     <tbody>
@@ -243,9 +245,6 @@
 
   <h3>Asset packs (Ultra Dynamic Sky and the like)</h3>
   <p>Fab packs work: import the pack and package as usual. <code>PackageMod.cmd</code> moves what your map uses into your plugin for you (section 3, Build). The sky, weather, clouds, sounds and effects are packaged with your map. The pack's editor tools (setup windows, readme, toolbar buttons) stay in the kit — Unreal never packages those for any game — and the check lists them as "editor tool". Packs with C++ code can't be used.</p>
-
-  <h3>Routes and online leaderboards</h3>
-  <p>Each finish route gets its own online leaderboards, for up to 32 routes per map. Route names: letters, numbers, spaces, <code>-</code> and <code>_</code>, up to 32 characters. Extra routes, or names with other characters, still count on the local leaderboard.</p>
 </section>
 
 <section id="package">
@@ -306,6 +305,7 @@ one for people who hate themselves.</code></pre>
     <li><strong>A map vote for a Workshop map</strong> starts the download for everyone who lacks it the moment the vote starts, so the map is there if the vote passes.</li>
     <li><strong>Maps that aren't on the Workshop</strong> can't be downloaded. The lobby list says "you don't have it" and joining explains why; send those players the zip.</li>
   </ul>
+  <p><strong>Your Blueprints in multiplayer:</strong> every player's game runs your map on its own. A door one player opens stays shut for the others, and moving platforms aren't in step between players. Other players never set off your triggers on your screen, so a launch pad only launches whoever stepped on it.</p>
   <p><strong>From the kit itself, multiplayer is off</strong> — the kit's editor has the console, so it could bring cheat settings into a lobby. Play multiplayer from the Steam version of the game. For the same reason, runs you finish inside the kit go to a separate local board (<code>Leaderboard.kit.json</code>) and never count.</p>
 </section>
 
