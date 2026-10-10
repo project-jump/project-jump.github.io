@@ -213,12 +213,13 @@
     <ul>
       <li>Online leaderboards: one per finish route, up to 32 per map. Route names: letters, numbers, spaces, <code>-</code> and <code>_</code>, up to 32 characters. Extra routes or other characters still count locally.</li>
       <li>Every finish counts on the local leaderboard (<code>top</code> in the console).</li>
+      <li>A Workshop item with more than one map gives each map its own leaderboards. Adding a map to an item that had only one starts the first map's online leaderboards over, so decide at the start.</li>
       <li>Wireframes of the Start/Finish boxes show in the editor and the game. You can customize the look of them by adjusting <strong>Line Thickness</strong>, the colours and <strong>Draw Through Walls</strong>.</li>
     </ul>
   </details>
 
   <h3 id="card">The map card</h3>
-  <p>In-game, the menu shows each map as a card: picture, name, gamemode, difficulty. Without one, yours gets a coloured placeholder and no difficulty or gamemode.</p>
+  <p>In-game, the menu shows each map as a card: picture, name, gamemode, difficulty. The loading screen shows the same picture, title, author and routes while your map loads. Without one, yours gets a coloured placeholder and no difficulty or gamemode.</p>
   <ol>
     <li>In the Content Browser, open the folder your level is in (<strong>YourPluginName Content → Maps</strong>). Right-click → <strong>Data Asset</strong> → <strong>JumperMapInfo</strong>.</li>
     <li>Name it exactly your level's name plus <code>_Info</code>: <code>YourMapName_Info</code>. The game only finds it with that name, next to the level.</li>
@@ -231,7 +232,8 @@
       <tr><td>Gamemode</td><td>CJ. (BHOP, SURF and KZ are for later.)</td></tr>
       <tr><td>Is Tutorial</td><td>Shows TUTORIAL instead of a difficulty.</td></tr>
       <tr><td>Thumbnail</td><td>Square picture: screenshot while playing (<kbd>F9</kbd>), crop square (1024×1024 is plenty), import the PNG next to the level.</td></tr>
-      <tr><td>Routes</td><td>One entry per finish route: its Route name (<code>main</code> if just one) and a <strong>Number</strong> 1–10. The card shows the first and "+N routes".</td></tr>
+      <tr><td>Routes</td><td>One entry per finish route: its Route name (<code>main</code> if just one) and a <strong>Number</strong> 1–10. The card shows the first, and a map with more routes gets an "N ROUTES" badge on its picture.</td></tr>
+      <tr><td>Radio Off</td><td>The game's radio stays quiet on your map. Tick it if the map has its own music or voicelines. The player's song carries on when they leave.</td></tr>
     </tbody>
   </table></div>
 
@@ -283,6 +285,8 @@ On Component Begin Overlap (Box)
         <tr><td>Set Player Gravity / Speed / Jump Height Scale</td><td>1 = normal, 0.5 = half, 2 = double. Jump height 0 = no jumping. Every map starts at 1.</td></tr>
         <tr><td>Reset Player Movement Scales</td><td>All three back to 1.</td></tr>
         <tr><td>Is Run In Progress, Get Run Time, Is Player Practicing</td><td>Reads the run timer and practice mode.</td></tr>
+        <tr><td>Hold Radio</td><td>Quiets the game's radio while your map plays something of its own (a song, a voiceline): <strong>true</strong> pauses it, <strong>false</strong> lets it carry on. Works from Event BeginPlay; leaving the map lets go too. To keep it off for the whole map, tick <strong>Radio Off</strong> in the _Info instead.</td></tr>
+        <tr><td>Is Radio Playing</td><td>Music is coming out of the radio right now.</td></tr>
       </tbody>
     </table></div>
   </details>
@@ -295,10 +299,27 @@ On Component Begin Overlap (Box)
     </ul>
   </details>
 
+  <h3 id="video">Videos on a screen</h3>
+  <p>A TV, a projector screen or a billboard can play a video, with its sound, through the <strong>Map Video</strong> component:</p>
+  <ol>
+    <li>Copy the video into <code>Plugins\YourPluginName\Movies\</code> with <strong>Windows File Explorer, not the editor</strong>: make the <code>Movies</code> folder yourself, next to <code>Content\</code> (not inside it). Don't import the video or drag it into the Content Browser; that makes an asset the game doesn't use. The editor doesn't show the Movies folder, and that's fine. The video: an <code>.mp4</code>, at most 1920×1080 and 200 MB, named with letters, digits, spaces and <code>_ - .</code> only.</li>
+    <li>Give the screen a material with a <strong>Texture Parameter</strong> named <code>Video</code> (any default texture; black is good) going into <strong>Emissive Color</strong>.</li>
+    <li>Add a <strong>Map Video</strong> component as a child of the screen's mesh (on the placed actor or in a Blueprint) and pick the file in <strong>Video File</strong>.</li>
+    <li>Press Play. It starts with the map and loops (<strong>Play On Start</strong>, <strong>Loop</strong>). The sound comes from the screen and fades with distance (the <strong>Sound</strong> settings).</li>
+  </ol>
+  <details><summary>Nodes and notes</summary>
+    <ul>
+      <li>Nodes: <strong>Play</strong>, <strong>Pause</strong>, <strong>Stop</strong> (back to the start), <strong>Set Video</strong> (another file from your Movies folder: a channel change), <strong>Set Looping</strong>, <strong>Set Volume</strong>, <strong>Is Playing</strong>, <strong>Show On Mesh</strong> (the same video on another mesh of the same actor).</li>
+      <li>Each player's game plays it on its own: not in sync between players. Up to 4 videos open at once per map.</li>
+      <li><code>PackageMod.cmd</code> packs your Movies folder with the map and checks every video; the Workshop upload takes them along.</li>
+      <li>Nothing shows? The log's <code>LogMapVideo</code> lines say why. Videos only run while playing, not while editing.</li>
+    </ul>
+  </details>
+
   <h3 id="limits">What maps can't do</h3>
   <p>The game won't load a map whose Blueprints try to:</p>
   <ul>
-    <li><strong>reach outside the game</strong>: files, websites, programs, downloads, video files, the microphone;</li>
+    <li><strong>reach outside the game</strong>: files, websites, programs, downloads, video files (except your own, through <a href="#video">Map Video</a>), the microphone;</li>
     <li><strong>take over the game</strong>: quit, load another level, kick or rename players, pause, slow time, save games;</li>
     <li><strong>change player settings</strong>: language, controls, graphics, sound, mouse cursor, window;</li>
     <li><strong>find out who's playing</strong>: names, Steam IDs;</li>
@@ -318,7 +339,7 @@ On Component Begin Overlap (Box)
   <p>The package step runs the same check:</p>
   <div class="tablewrap"><table>
     <tbody>
-      <tr><td><code>MODCHECK BLOCKED</code></td><td>Names the Blueprint and the node that isn't allowed. Remove it and package again.</td></tr>
+      <tr><td><code>MODCHECK BLOCKED</code></td><td>Names the Blueprint and the node that isn't allowed, or a packaged file the game would refuse. Remove it and package again (<a href="#trouble">Troubleshooting</a>).</td></tr>
       <tr><td><code>MODCHECK note</code></td><td>Allowed, but does nothing in the game (usually something done to the player without Map Scripting).</td></tr>
       <tr><td><code>MODCHECK editor</code></td><td>An editor-only tool. Nothing to do.</td></tr>
     </tbody>
@@ -427,13 +448,14 @@ one for people who hate themselves.</code></pre>
     <div><dt>"Close the Unreal editor first"</dt><dd>The move edits your files. Save, close the editor, run it again.</dd></div>
     <div><dt>Something looks wrong after a move</dt><dd>Originals are in <code>Saved\MoveIntoPlugin-Backup\&lt;map&gt;-&lt;date&gt;\</code>, in their folder layout. Close the editor and copy them back over <code>Plugins\</code> and <code>Content\</code>.</dd></div>
     <div><dt><code>MODCHECK</code> lines, or "MOD BLOCKED" in the game</dt><dd>A Blueprint uses something maps can't; the line names it. Remove that node (<a href="#limits">section 6</a>).</dd></div>
+    <div><dt>"MODCHECK BLOCKED … holds …: a map's files go in its own folder"</dt><dd>Your map uses an engine asset the game doesn't have, and the cook packed it in with your map, outside your plugin. The game would refuse the whole map, so nothing was installed. In the Content Browser, Settings → <strong>Show Engine Content</strong>; find the asset (the path after <code>Engine/Content/</code>), right-click → <strong>Reference Viewer</strong> to see what uses it, and point that at something in your plugin or the game's. Package again.</dd></div>
     <div><dt>"Expected exactly one .uplugin"</dt><dd>Your plugin folder must contain exactly one <code>.uplugin</code> file: your plugin's own.</dd></div>
     <div><dt>The package script can't find the engine</dt><dd>Pass it explicitly: <code>-Engine "C:\Program Files\Epic Games\UE_5.8"</code>.</dd></div>
   </dl>
 
   <h3>In the game</h3>
   <dl class="trouble">
-    <div><dt>My map isn't listed</dt><dd>Look in <code>%LOCALAPPDATA%\project_jump\Saved\Logs\project_jump.log</code> for <code>LogJumperMods</code> lines. "no .pak files": the cook produced nothing. "no maps.json": the installed map is incomplete. Either way, run <code>PackageMod.cmd</code> again.</dd></div>
+    <div><dt>My map isn't listed</dt><dd>Restart the game first: it looks for installed maps when it starts. Still missing? Open the game's log: in Steam, right-click PROJECT_JUMP → Manage → Browse local files, then <code>project_jump\Saved\Logs\project_jump.log</code>. Search it for your map's name. "no .pak files": the cook produced nothing. "no maps.json": the installed map is incomplete. Either way, run <code>PackageMod.cmd</code> again. "refused — … a map's files go in its own folder": a file was packed outside your plugin (see Packaging, above).</dd></div>
     <div><dt>My launch pad or teleporter does nothing</dt><dd>Use Map Scripting nodes (or Set Actor Location / Launch Character) behind an Is Local Player check. Other nodes done to the player are skipped and show as <code>MODCHECK note</code>.</dd></div>
   </dl>
 
