@@ -21,9 +21,83 @@
 </header>
 
 <!-- New releases go above this one: copy the article, change the version and the ids. -->
+<article class="release" id="v0.3.2">
+  <div class="release-head"><h2>Version 0.3.2</h2><span class="badge">Latest</span></div>
+  <p class="note">Version 0.3.2 is live. Please restart Steam if you don't see the update.</p>
+  <nav class="cats" aria-label="0.3.2 sections">
+    <a href="#v0.3.2-runs">Saved runs</a><a href="#v0.3.2-multiplayer">Multiplayer</a><a href="#v0.3.2-radio">Radio &amp; sound</a><a href="#v0.3.2-loading">Loading &amp; graphics</a><a href="#v0.3.2-rpg">RPG</a><a href="#v0.3.2-leaderboards">Leaderboards &amp; replays</a><a href="#v0.3.2-maps">Custom maps</a><a href="#v0.3.2-other">Other</a>
+  </nav>
+
+  <h3 id="v0.3.2-runs">Saved runs</h3>
+  <ul>
+    <li>Runs are now kept between sessions: leave mid-run and pick it up later from the pause menu's new SAVED RUNS page</li>
+    <li>A resumed run goes back to your last save with the clock, saves, loads and rockets exactly as they were, and still counts for the leaderboard with one replay across every session</li>
+    <li>Only a restart throws a run away: leaving the map, KEEP THIS RUN or switching to another run all keep it</li>
+    <li>Up to 20 runs per map, named RUN 1, RUN 2 and so on, and renamable; they save themselves as you play and are stored on Steam Cloud</li>
+    <li>The restart prompt and NEW RUN now say whether your run is kept before you throw it away</li>
+    <li>Practice no longer leaves its weapon switches and loads in your run's replay</li>
+  </ul>
+
+  <h3 id="v0.3.2-multiplayer">Multiplayer</h3>
+  <ul>
+    <li>When the host leaves, the game carries on: the player with the best connection takes over and everyone moves to their game automatically, with your run picked up from its last save</li>
+    <li>New lobby finishes card: see when someone in the lobby finishes a route, with their time and whether it was a record, a lobby best or a PB (a HUD element, ALL or BESTS ONLY)</li>
+    <li>Everyone now spawns exactly on the start; fixed spawning inside walls or far away on some maps</li>
+    <li>Fixed a host crash when a player joined twice in quick succession</li>
+    <li>Chat works with the chat HUD element turned off, and stays up while watching replays and in free cam</li>
+    <li>Standing still with the pause menu open in a lobby now holds your run clock, like spectating</li>
+    <li>The RPG reload bar now shows the player you're spectating instead of getting stuck</li>
+    <li>VOTE KICK moved to the far end of a player's row, away from SPECTATE</li>
+  </ul>
+
+  <h3 id="v0.3.2-radio">Radio &amp; sound</h3>
+  <ul>
+    <li>New radio: music on the menu and in maps, with a card showing the song when it starts</li>
+    <li>Every song plays once before any repeats, in a new order each time, and all songs play at the same loudness</li>
+    <li>Pause and skip songs from the pause menu, or bind keys for them in CONTROLS</li>
+    <li>New SOUND settings tab: master volume, game sounds, radio on/off and volume, and the song card</li>
+    <li>Master volume now starts at 25% and no longer gets louder when a map loads</li>
+  </ul>
+
+  <h3 id="v0.3.2-loading">Loading &amp; graphics</h3>
+  <ul>
+    <li>New loading screen with the map's picture, author, routes, your best and how many saved runs you have there, plus a tip</li>
+    <li>It stays up until the map's shaders and textures are ready, so the map no longer stutters when you start playing</li>
+    <li>On first launch the game now picks graphics settings for your PC; GRAPHICS has an AUTO-DETECT button to do it again</li>
+  </ul>
+
+  <h3 id="v0.3.2-rpg">RPG</h3>
+  <ul>
+    <li>With RPG switch on, loading gives you the launcher back if you had it out for that attempt, so you don't have to draw it before every retry</li>
+  </ul>
+
+  <h3 id="v0.3.2-leaderboards">Leaderboards &amp; replays</h3>
+  <ul>
+    <li>LOW-RPG: a faster run with more rockets no longer replaces your lowest-rocket run</li>
+    <li>Maps with many routes: the route chips wrap onto their own row instead of running off the leaderboard, and map cards show the route count as a badge</li>
+    <li>Loads in replays now cut exactly instead of sliding the camera across</li>
+    <li>Your own weapon comes back correctly after watching a replay</li>
+  </ul>
+
+  <h3 id="v0.3.2-maps">Custom maps</h3>
+  <ul>
+    <li>Map makers can play their own videos on a screen in the map</li>
+    <li>Maps can turn the radio off (for maps with their own music or voicelines), or pause it from Blueprints</li>
+    <li>Maps that use the engine's built-in fonts now load; the game used to refuse them</li>
+    <li>Workshop items with more than one map now give each map its own leaderboards</li>
+    <li>The map kit now runs the same check the game does, and names every file the game would refuse</li>
+  </ul>
+
+  <h3 id="v0.3.2-other">Other</h3>
+  <ul>
+    <li>Re-reading a tutorial step is now a rebindable action (default Y), and works in multiplayer</li>
+    <li>Debug text no longer shows on screen; important alerts get their own card</li>
+    <li>Typing in a pause-menu text box no longer closes the menu when you press M</li>
+  </ul>
+</article>
+
 <article class="release" id="v0.3.1">
-  <div class="release-head"><h2>Version 0.3.1</h2><span class="badge">Latest</span></div>
-  <p class="note">Version 0.3.1 is live. Please restart Steam if you don't see the update.</p>
+  <div class="release-head"><h2>Version 0.3.1</h2></div>
   <nav class="cats" aria-label="0.3.1 sections">
     <a href="#v0.3.1-models">Player models</a><a href="#v0.3.1-rpg">RPG</a><a href="#v0.3.1-maps">Custom maps</a>
   </nav>
