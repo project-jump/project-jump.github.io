@@ -21,9 +21,46 @@
 </header>
 
 <!-- New releases go above this one: copy the article, change the version and the ids. -->
+<article class="release" id="v0.3.3">
+  <div class="release-head"><h2>Version 0.3.3</h2><span class="badge">Latest</span></div>
+  <p class="note">Version 0.3.3 is live. Please restart Steam if you don't see the update.</p>
+  <nav class="cats" aria-label="0.3.3 sections">
+    <a href="#v0.3.3-multiplayer">Multiplayer</a><a href="#v0.3.3-mouse">Mouse</a><a href="#v0.3.3-hud">HUD &amp; menus</a><a href="#v0.3.3-graphics">Graphics</a><a href="#v0.3.3-maps">Custom maps</a>
+  </nav>
+
+  <h3 id="v0.3.3-multiplayer">Multiplayer</h3>
+  <ul>
+    <li>Teleport to another player to try the jump they just showed you: TELEPORT on their row in the pause menu's PLAYERS page, or on the hold-Tab scoreboard (right click to bring the cursor out)</li>
+    <li>Teleporting puts you in practice where they stand, crouched if they are and facing where they look; leave practice to go back to your run exactly as it was</li>
+  </ul>
+
+  <h3 id="v0.3.3-mouse">Mouse</h3>
+  <ul>
+    <li>Raw input off: fixed the frequent micro-stutter, and the mouse sometimes not picking up all of your movement</li>
+    <li>Raw input off: firing and aiming no longer switch you back to raw input for a moment</li>
+  </ul>
+
+  <h3 id="v0.3.3-hud">HUD &amp; menus</h3>
+  <ul>
+    <li>Saving or loading again while the notice is still up now pops it and counts (POSITION SAVED &times;3), so every press visibly lands</li>
+    <li>The warning under NEW RUN on the SAVED RUNS page no longer runs off the edge of the card</li>
+  </ul>
+
+  <h3 id="v0.3.3-graphics">Graphics</h3>
+  <ul>
+    <li>Fixed blocky dark outlines around anything in front of volumetric clouds, most visible on maps using Ultra Dynamic Sky</li>
+  </ul>
+
+  <h3 id="v0.3.3-maps">Custom maps</h3>
+  <ul>
+    <li>New Teleport Sender and Teleport Receiver: teleporters with no Blueprint needed. Pair them by ID, send any number of senders to one receiver (every finish back to spawn), and choose the arrival speed, the view and whether the run restarts. See the mapping guide</li>
+    <li>Maps can now set any of their own visual settings (lighting, Lumen, sky, fog, clouds, water, post-processing, foliage), so sky and weather packs like Ultra Dynamic Sky look the same in the game as in the editor</li>
+    <li>Engine-wide sound, animation and effects settings are no longer changeable by maps; set those in the map's own assets</li>
+  </ul>
+</article>
+
 <article class="release" id="v0.3.2">
-  <div class="release-head"><h2>Version 0.3.2</h2><span class="badge">Latest</span></div>
-  <p class="note">Version 0.3.2 is live. Please restart Steam if you don't see the update.</p>
+  <div class="release-head"><h2>Version 0.3.2</h2></div>
   <nav class="cats" aria-label="0.3.2 sections">
     <a href="#v0.3.2-runs">Saved runs</a><a href="#v0.3.2-multiplayer">Multiplayer</a><a href="#v0.3.2-radio">Radio &amp; sound</a><a href="#v0.3.2-loading">Loading &amp; graphics</a><a href="#v0.3.2-rpg">RPG</a><a href="#v0.3.2-leaderboards">Leaderboards &amp; replays</a><a href="#v0.3.2-maps">Custom maps</a><a href="#v0.3.2-other">Other</a>
   </nav>
