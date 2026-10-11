@@ -32,7 +32,7 @@
   <div class="label">Build</div>
   <ol>
     <li><a href="#movement"><span class="n">4</span>Collision and sizes</a></li>
-    <li><a href="#timer"><span class="n">5</span>Timer zones, map card</a></li>
+    <li><a href="#timer"><span class="n">5</span>Timer zones, teleporters, map card</a></li>
     <li><a href="#bp"><span class="n">6</span>Blueprints</a></li>
   </ol>
   <div class="label">Ship</div>
@@ -197,7 +197,7 @@
 </section>
 
 <section id="timer">
-  <h2><span class="n">5</span>Timer zones and the map card</h2>
+  <h2><span class="n">5</span>Timer zones, teleporters and the map card</h2>
   <p class="short"><span class="tag">In short</span>One <strong>Start</strong> zone, one <strong>Finish</strong> zone, and a <code>_Info</code> asset for the menu card.</p>
 
   <h3>Timer zones</h3>
@@ -217,6 +217,22 @@
       <li>Wireframes of the Start/Finish boxes show in the editor and the game. You can customize the look of them by adjusting <strong>Line Thickness</strong>, the colours and <strong>Draw Through Walls</strong>.</li>
     </ul>
   </details>
+
+  <h3 id="teleport">Teleporters</h3>
+  <p>No Blueprint needed. Place Actors → search "Teleport":</p>
+  <ul>
+    <li><strong>Teleport Sender</strong>: a box. Entering it teleports the player. It's purple in the editor and invisible in the game.</li>
+    <li><strong>Teleport Receiver</strong>: where they land. Put it on the floor like a Player Start and turn it: players look along its arrow.</li>
+    <li><strong>Teleport ID</strong> pairs them: a sender goes to the receiver with the same ID (<code>easy</code> → <code>easy</code>). Any number of senders can share one receiver, like every finish sending back to spawn. Each receiver needs its own ID.</li>
+  </ul>
+  <div class="tablewrap"><table>
+    <tbody>
+      <tr><td>Arrival Speed</td><td><strong>Stop</strong>: arrive standing still. <strong>Keep</strong>: keep the velocity. <strong>Redirect</strong>: keep the speed, heading along the receiver's arrow.</td></tr>
+      <tr><td>Set View</td><td>Turn the player to the receiver's arrow. Off keeps their own view.</td></tr>
+      <tr><td>Restart Run</td><td>What pressing restart does, on the way: the run and the save are cleared. Tick it on a finish that sends players back to spawn. Without it, a player holding a save who lands in the Start zone goes back to their save, as walking in would.</td></tr>
+    </tbody>
+  </table></div>
+  <p>In the editor each sender draws an arrow to its receiver, and both show their ID. Red text means a sender with no receiver, or two receivers with the same ID.</p>
 
   <h3 id="card">The map card</h3>
   <p>In-game, the menu shows each map as a card: picture, name, gamemode, difficulty. The loading screen shows the same picture, title, author and routes while your map loads. Without one, yours gets a coloured placeholder and no difficulty or gamemode.</p>
@@ -328,7 +344,7 @@ On Component Begin Overlap (Box)
   <details><summary>Allowed, but limited</summary>
     <ul>
       <li>Normal nodes done to the player (Destroy Actor, Set Actor Hidden In Game, Set Life Span...) are skipped. Camera shakes and fades work.</li>
-      <li><strong>Execute Console Command</strong> only sets visual and sound settings (fog, clouds, sky, shadows, lighting, effects) to a number. Anything else is ignored, and it all resets when your map ends.</li>
+      <li><strong>Execute Console Command</strong> sets how your map looks: lighting, shadows, Lumen, sky, fog, clouds, water, translucency, post-processing, foliage and grass, to a number. Sky and weather packs (Ultra Dynamic Sky and others) work as in the editor. The player's own settings (upscaling, anti-aliasing, motion blur, quality presets), sound and effects switches, and debug or file settings are ignored. Everything resets when your map ends.</li>
       <li><strong>Load Asset</strong> works for your content and the game's.</li>
       <li>Blueprints can react to keys, but the game's controls come first. In the game, <kbd>Esc</kbd> always opens the menu.</li>
       <li>"Run on Server" events do nothing; "Multicast" and "Run on Owning Client" work.</li>
@@ -399,7 +415,7 @@ one for people who hate themselves.</code></pre>
     <li><strong>Reset the leaderboards</strong>: tick it when the course changes (jumps, bounces, shortcuts). Everyone's times start over and old runs are hidden. Leave it off for looks and lighting. <strong>Can't be undone.</strong></li>
     <li><strong>Also update the title, description...</strong> resends <code>workshop.txt</code>. Leave it off if you edit the page on Steam.</li>
     <li>Screenshots only upload on the first publish; after that, manage them on Steam.</li>
-    <li><strong>Don't delete <code>workshop.json</code></strong> in your plugin folder: it links the map to its item. Without it, the next publish makes a second item.</li>
+    <li><strong>Don't delete <code>workshop.json</code></strong> (in <code>%LOCALAPPDATA%\project_jump\Mods\YourPluginName\</code>): it links the map to its item. Without it, the next publish makes a second item. The exception is an item that no longer exists (<a href="#trouble">Troubleshooting</a>).</li>
   </ul>
 
   <h3>Playing Workshop maps</h3>
@@ -457,11 +473,13 @@ one for people who hate themselves.</code></pre>
   <dl class="trouble">
     <div><dt>My map isn't listed</dt><dd>Restart the game first: it looks for installed maps when it starts. Still missing? Open the game's log: in Steam, right-click PROJECT_JUMP → Manage → Browse local files, then <code>project_jump\Saved\Logs\project_jump.log</code>. Search it for your map's name. "no .pak files": the cook produced nothing. "no maps.json": the installed map is incomplete. Either way, run <code>PackageMod.cmd</code> again. "refused — … a map's files go in its own folder": a file was packed outside your plugin (see Packaging, above).</dd></div>
     <div><dt>My launch pad or teleporter does nothing</dt><dd>Use Map Scripting nodes (or Set Actor Location / Launch Character) behind an Is Local Player check. Other nodes done to the player are skipped and show as <code>MODCHECK note</code>.</dd></div>
+    <div><dt>A Teleport Sender does nothing</dt><dd>Its label is red: no receiver has that Teleport ID (IDs must match exactly). Or the player was already inside the box: senders fire on the way in, so walk out and back in. Nothing teleports while flying in practice.</dd></div>
   </dl>
 
   <h3>Steam Workshop</h3>
   <dl class="trouble">
     <div><dt>"Steam refused"</dt><dd>Run the game through Steam, logged in to the account that owns it. If it names an agreement, accept it on the item's page.</dd></div>
+    <div><dt>"Steam couldn't read the map files or an image [EResult 9]"</dt><dd>Usually the map is still linked to a Workshop item that no longer exists (you deleted it on Steam, or a first publish stopped halfway). Delete <code>workshop.json</code> from <code>%LOCALAPPDATA%\project_jump\Mods\YourPluginName\</code> and from the kit's <code>Saved\Mods\YourPluginName\</code>, then publish again: it makes a new item. Only do this when the old item is really gone, or you'll end up with two copies of your map.</dd></div>
     <div><dt>"The plugin name is already used by another map"</dt><dd>Someone published a map with that name first, and two maps can't share one. Switch to a new name before your first publish: make a new Content Only plugin (step 3.2); in the Content Browser drag your folders from the old plugin onto the new one → <strong>Move Here</strong>; right-click the old plugin's folder → <strong>Fix Up Redirectors</strong>; copy its <code>Workshop</code> folder across. Close the editor, delete the old plugin's folder from <code>Plugins\</code>, then package and publish the new one.</dd></div>
     <div><dt>My map isn't on the WORKSHOP page, or says NEEDS ATTENTION</dt><dd>Package again, then press REFRESH. The page lists what's missing (usually the description in <code>workshop.txt</code>).</dd></div>
     <div><dt>A subscribed map doesn't show up</dt><dd>Steam may still be downloading: wait a minute or restart the game. Still missing? It was published for an older game version; the mapper needs to re-package from the current kit and publish again.</dd></div>
